@@ -98,12 +98,14 @@ LPWAN
     \node[] at (-1.2, 7) {1 Gbit/sec};
     \draw[] (-0.1,7)--(0.1,7);
 
+    \only<4->{
     \node[draw,fill=white, visible on=<4->] at (8,1.5) (lora) {LoRa};
     \node[draw,fill=white, visible on=<4->] at (8.7,0.8) (sigfox) {SigFox};
     \node[draw,fill=white, visible on=<4->] at (7.4,2.2) (nb) {NB-IOT};
     \begin{scope}[on background layer]
       \node[draw,fill=blue!30,fit=(lora) (sigfox) (nb), label=above:{LPWAN}, visible on=<4->] {};
     \end{scope}
+    }
 
     \node[draw,fill=white] at (2.2,3.5) (bluetooth) {Bluetooth};
     \node[draw,fill=white] at (2.7,2.5) (zigbee) {ZigBee};
@@ -112,16 +114,20 @@ LPWAN
       \node[draw,fill=blue!10,fit=(bluetooth) (zigbee) (ble), label=above:{Short-range}] {};
     \end{scope}
 
+    \only<2->{
     \node[draw,fill=white, visible on=<2->] at (3,5) (wifi) {WiFi};
     \begin{scope}[on background layer]
       \node[draw,fill=blue!50,fit=(wifi), visible on=<2->] {};
     \end{scope}
+    }
 
+    \only<3->{
     \node[draw,fill=white, visible on=<3->] at (6.8,5) (lte) {LTE};
     \node[draw,fill=white, visible on=<3->] at (5.8,6) (5g) {5G};
     \begin{scope}[on background layer]
       \node[draw,fill=blue!60,fit=(lte) (5g), label=above:{Cellular}, visible on=<3->] {};
     \end{scope}
+    }
 
     \node[] at (6.9,8.2) (leg5) {\small Low};
     \node[draw,fill=blue!10] at (7.5,8.2) (leg1) {};
@@ -151,11 +157,45 @@ LPWAN
 \begin{column}{0.5\textwidth}
 \begin{itemize}
     \item Stars-of-stars topology
+    \begin{itemize}
+      \item End-nodes/Motes
+      \item Gateways
+      \item Central Server
+    \end{itemize}
+    \item Direct Link to gateway
+    \item Transmit as soon as possible
+    \begin{itemize}
+      \item Low channel occupation
+      \item Power efficient
+    \end{itemize}
 \end{itemize}
 \end{column}
 \begin{column}{0.5\textwidth}
-\begin{figure}
-\includegraphics[width=1\textwidth]{presentation.tex/fig/starsofstars.png}
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[auto, thick]
+      % Place super peers and connect them
+      \foreach \place/\name in {{(-1,-2)/a}, {(-0,1)/b}}
+        \node[gateways] (\name) at \place {};
+      \node[server] (d) at (1.5,-1.5) {};
+      %
+      \foreach \source/\dest in {a/d, b/d}
+        \path[] (\source) edge (\dest);
+
+      % Place normal peers
+      \foreach \pos/\i in {above left of/1, left of/2, below left of/3}
+        \node[motes, \pos =b ] (b\i) {};
+      \foreach \speer/\peer in {b/b1,b/b2,b/b3}
+        \path[dotted] (\speer) edge (\peer);
+      %
+      \foreach \pos/\i in {below left of/1, below of/2, left of/3}
+        \node[motes, \pos =a ] (a\i) {};
+      \foreach \speer/\peer in {a/a1,a/a2,a/a3}
+        \path[dotted] (\speer) edge (\peer);
+      %
+      \path[dotted] (a) edge (b3);
+    \end{tikzpicture}
+    \caption{Star topology\label{fig:startopology}}
 \end{figure}
 \end{column}
 \end{columns}

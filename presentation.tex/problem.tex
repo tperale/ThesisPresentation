@@ -1,35 +1,337 @@
 \begin{frame}{Problem}
-\framesubtitle{LoRaWAN}
-
+\framesubtitle{LoRaWAN - Does Not Scale}
+\begin{columns}
+\begin{column}{0.4\textwidth}
 \begin{itemize}
-    \item Does not scale
+    \item No channel sensing
     \begin{itemize}
-        \item No channel sensing
+        \item Collision
     \end{itemize}
+    \item SF7 Over-usage
     \item Duty-cycle limitation
     \begin{itemize}
         \item 36 sec of transmission/hour
     \end{itemize}
-    \item Coverage
+\end{itemize}
+\end{column}
+\begin{column}{0.6\textwidth}
+\begin{figure}[H] % TODO More info on axis
+\centering
+  \resizebox{7cm}{4cm}{%
+
+  \begin{tikzpicture}[
+    description/.style={draw, rectangle},
+    arr/.style={help lines,black!70,<->},
+    zigzag/.style={to path={ -- ($(\tikztostart)!.55!-7:(\tikztotarget)$) -- ($(\tikztostart)!.45!7:(\tikztotarget)$) -- (\tikztotarget) \tikztonodes}}
+    ]
+    \draw[->,thick] (-0.1,0)--(12,0) node[right]{time};
+    \draw[->,thick] (0,-0.1)--(0,8) node[above]{};
+
+    \node[] at (-1.2, 2) {Node 1};
+    \draw[] (-0.1,2)--(0.1,2);
+    \only<2->{
+    \node[] at (-1.2, 6) {Node 2};
+    \draw[] (-0.1,6)--(0.1,6);
+    }
+
+    \draw[] (0.5,1)--(0.5,3);
+    \node[] at (1, 0.5) {Wake up};
+    \only<2->{
+    \draw[] (3.5,5)--(3.5,7);
+    \node[] at (3.5, 4.5) {Wake up};
+    }
+
+    \begin{scope}[xshift=0cm,yshift=0cm,inner sep=0pt, outer sep=0pt]
+        \only<2->{
+        \begin{scope}[on background layer]
+            \node[draw,fill=gray!10,fit={(4,5) (6,7)}] {};
+            \node[draw,fill=blue!10,fit={(6,5) (12,7)}] {};
+        \end{scope}
+        \node () [description, fit={(4,5) (6,7)}, label=center:{Preamble}] {};
+        \node () [description, fit={(6,5) (12,7)}, label=center:{Payload}] {};
+        }
+
+        \begin{scope}[on background layer]
+            \node[draw,fill=gray!10,fit={(1,1) (3,3)}] {};
+            \node[draw,fill=blue!10,fit={(3,1) (10,3)}] {};
+        \end{scope}
+        \node () [description, fit={(1,1) (3,3)}, label=center:{Preamble}] {};
+        \node () [description, fit={(3,1) (10,3)}, label=center:{Payload}] {};
+    \end{scope}
+    \only<3->{
+     \draw[-stealth,line width=1mm] (8,5) to[zigzag] +(0,-2);
+     \node[] at (9.2, 4.3) {Collision};
+    }
+\end{tikzpicture}
+  }
+\caption{Collision between nodes\label{fig:collision}}
+\end{figure}
+
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Problem}
+\framesubtitle{LoRaWAN - Coverage}
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\begin{itemize}
+   \item Coverage
     \begin{itemize}
         \item Topology
         \item Environmental Factor
     \end{itemize}
-    \item Bordering node
-    \begin{itemize}
-        \item Longer transmission
-        \item Higher power consumption
-    \end{itemize}
+    \only<2->{
+        \item Bordering node
+        \begin{itemize}
+            \item High SF
+            \item Longer transmission
+            \item Higher power consumption
+        \end{itemize}
+    }
 \end{itemize}
+\end{column}
+\begin{column}{0.6\textwidth}
+\begin{figure}[H]
+    \centering
+    \def\angle{0}
+    \def\radius{3}
+    \resizebox{4cm}{4cm}{%
+    \begin{tikzpicture}[nodes = {font=\sffamily}]
+      \foreach \color in {
+            yellow,
+            red,
+            yellow,
+            white,
+            red,
+            yellow,
+            white,
+            yellow,
+            white,
+            white,
+            red,
+            red,
+        } {
+        \ifx\color\empty\else
+            \draw[fill={\color!50},draw={\color}] (0,0) -- (\angle:\radius)
+              arc (\angle:\angle+30:\radius) -- cycle;
+            \pgfmathparse{\angle+30}
+            \xdef\angle{\pgfmathresult}
+        \fi
+        };
+        \xdef\radius{2.5}
+        \foreach \color in {
+            yellow,
+            red,
+            yellow,
+            yellow,
+            red,
+            white,
+            yellow,
+            red,
+            white,
+            white,
+            white,
+            white,
+        } {
+        \ifx\color\empty\else
+            \draw[fill={\color!50},draw={\color}] (0,0) -- (\angle:\radius)
+              arc (\angle:\angle+30:\radius) -- cycle;
+            \pgfmathparse{\angle+30}
+            \xdef\angle{\pgfmathresult}
+        \fi
+        };
+        \xdef\radius{2}
+        \foreach \color in {
+            yellow,
+            red,
+            green,
+            red,
+            yellow,
+            white,
+            yellow,
+            white,
+            white,
+            white,
+            white,
+            white,
+        } {
+        \ifx\color\empty\else
+            \draw[fill={\color!50},draw={\color}] (0,0) -- (\angle:\radius)
+              arc (\angle:\angle+30:\radius) -- cycle;
+            \pgfmathparse{\angle+30}
+            \xdef\angle{\pgfmathresult}
+        \fi
+        };
+        \xdef\radius{1.5}
+        \foreach \color in {
+            yellow,
+            red,
+            yellow,
+            yellow,
+            yellow,
+            green,
+            yellow,
+            white,
+            red,
+            white,
+            white,
+            white,
+        } {
+        \ifx\color\empty\else
+            \draw[fill={\color!50},draw={\color}] (0,0) -- (\angle:\radius)
+              arc (\angle:\angle+30:\radius) -- cycle;
+            \pgfmathparse{\angle+30}
+            \xdef\angle{\pgfmathresult}
+        \fi
+        };
+        \xdef\radius{1}
+        \foreach \color in {
+            green,
+            green,
+            green,
+            yellow,
+            yellow,
+            yellow,
+            white,
+            white,
+            yellow,
+            red,
+            yellow,
+            red,
+        } {
+        \ifx\color\empty\else
+            \draw[fill={\color!50},draw={\color}] (0,0) -- (\angle:\radius)
+              arc (\angle:\angle+30:\radius) -- cycle;
+            \pgfmathparse{\angle+30}
+            \xdef\angle{\pgfmathresult}
+        \fi
+        };
+        \xdef\radius{0.5}
+        \foreach \color in {
+            green,
+            green,
+            yellow,
+            yellow,
+            green,
+            green,
+            yellow,
+            red,
+            yellow,
+            green,
+            green,
+            green,
+        } {
+        \ifx\color\empty\else
+            \draw[fill={\color!50},dotted,draw={\color}] (0,0) -- (\angle:\radius)
+              arc (\angle:\angle+30:\radius) -- cycle;
+            \pgfmathparse{\angle+30}
+            \xdef\angle{\pgfmathresult}
+        \fi
+        };
+        \only<2->{
+            \path[thick, dotted] (-0.7, -1.1) edge (0,0);
+            \node[motes] () at (-0.7, -1.1) {};
+            \path[thick, dotted] (-1.5, 2.2) edge (0,0);
+            \node[motes] () at (-1.5, 2.2) {};
+            \path[thick, dotted] (2.5, 2.3) edge (0,0);
+            \node[motes] () at (2.5, 2.3) {};
+            \path[thick, dotted] (2.2, -2.1) edge (0,0);
+            \node[motes] () at (2.2, -2.1) {};
+        }
+        \foreach \place/\name in {{(0,0)/a}}
+            \node[gateways] (\name) at \place {};
+    \end{tikzpicture}
+    }
+\caption{Typical gateway coverage\cite{lorajambalaya}\label{fig:coverage}}
+\resizebox{5.5cm}{0.5cm}{%
+\begin{tabular}{r@{: }l r@{: }l}
+\begin{tikzpicture}\draw[fill=green,line width=1pt]  circle(1ex);\end{tikzpicture} & Good\ Connection & \begin{tikzpicture}\draw[fill=yellow,line width=1pt]  circle(1ex);\end{tikzpicture} & Intermediate\ Connection\\
+\begin{tikzpicture}\draw[fill=red,line width=1pt]  circle(1ex);\end{tikzpicture} & Bad\ Connection & \begin{tikzpicture}\draw[fill=white,line width=1pt]  circle(1ex);\end{tikzpicture} & No\ Connection 
+\end{tabular}
+}
+\end{figure}
+
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Problem}
+\framesubtitle{LoRaWAN - Linear Sensor Network}
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\begin{itemize}
+    \item Linear networks
+    \begin{itemize}
+        \item Pipeline
+        \item Tunnels
+    \end{itemize}
+    \item Expensive infrastructure
+    \item Little coverage
+\end{itemize}
+\end{column}
+\begin{column}{0.6\textwidth}
+
+\begin{figure}[H]
+    \centering
+    \resizebox{6.5cm}{4cm}{%
+    \begin{tikzpicture}
+    \foreach \place/\name in {{(0,0)/a}}
+    \path[->] (-5,0) edge (5,0);
+    \node[motes] (a4) at (-4.5, 0) {};
+    \node[motes] (a5) at (-2.5, 0) {};
+    \node[motes] (a7) at (2.5, 0) {};
+    \node[motes] (a8) at (4.5, 0) {};
+    \node[gateways] (a) at (0,0) {};
+    \draw[dotted,draw={black}] (0,0) circle (3cm);
+    \pgfmathparse{\angle+30}
+    \xdef\angle{\pgfmathresult}
+    \end{tikzpicture}
+    }
+    \caption{Gateway coverage on linear networks\label{fig:lsn}}
+\end{figure}
+
+\end{column}
+\end{columns}
 \end{frame}
 
 \begin{frame}{Problem}
 \framesubtitle{Multi-hop}
+\begin{columns}
+\begin{column}{0.6\textwidth}
 \begin{itemize}
     \item Message relayed to neighbor
     \item Range increased
-    \item Less transmission for far away nodes 
+    \item Power efficient for border nodes
+    \item Adapt to topology
+    \item Overall higher energy consumption
 \end{itemize}
+\end{column}
+\begin{column}{0.4\textwidth}
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[auto, thick]
+      % Place super peers and connect them
+      \foreach \place/\name in {{(0,0)/a}}
+        \node[gateways] (\name) at \place {};
+      \node[motes] (a4) at (-2, 1) {};
+      \node[motes] (a5) at (-3, 1.3) {};
+      \node[motes] (a7) at (-2.5, -0.5) {};
+      \node[motes] (a8) at (-2, -1) {};
+     \foreach \pos/\i in {below left of/1, below of/2, left of/3, above left of/6}
+        \node[motes, \pos =a ] (a\i) {};
+      \foreach \speer/\peer in {a/a1,a/a2,a/a3,a7/a3,a8/a3}
+        \path[dotted] (\speer) edge (\peer);
+      \path[dotted,->] (a5) edge (a4);
+      \path[dotted,->] (a4) edge (a6);
+      \path[dotted,->] (a6) edge (a);
+    \end{tikzpicture}
+    \caption{Multi-hop Communication\label{fig:multihop}}
+\end{figure}
+
+\end{column}
+\end{columns}
+
 \end{frame}
 
 \begin{frame}{Problem}

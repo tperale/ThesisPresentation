@@ -11,30 +11,186 @@
         \item Power efficiency
         \item Reliability
     \end{itemize}
-    \item This is the job of the MAC protocol
+    \item Lack of MAC protocol
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Approach}
-\framesubtitle{TSCH}
+\framesubtitle{Time Slotted Channel Hopping (TSCH)}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+
+Made for IEEE802.15.4 Phy
 
 \begin{itemize}
-    \item Made for IEEE802.15.4 Phy
-    \item Time Division Multiplexing
-    \item Frequency Division Multiplexing
+  \item Time Division Multiplexing
+  \begin{itemize}
+    \item Power Efficient
+    \item No collision
+  \end{itemize}
+  \only<2->{
+  \item Frequency Division Multiplexing
+  \begin{itemize}
+    \item External interference resilience
+    \item Concurrent transmission
+  \end{itemize}
+  }
 \end{itemize}
+
+\end{column}
+\begin{column}{0.5\textwidth}
+
+\begin{figure}[H]
+\centering
+
+  \resizebox{5cm}{4cm}{%
+  \begin{tikzpicture}[
+    asn/.style={black!70, minimum size=1cm},
+    timeslot/.style={draw, rectangle, minimum size=1cm},
+    arr/.style={help lines,black!70,<->},
+    desc/.style={black!70},
+  ]
+    \only<2->{
+    \foreach [evaluate={\ts=int(mod(\i, 4))}] \i in {0,...,7} {
+    \node (ts3\i) [timeslot] at (\i, 3) {};
+    }
+    \foreach [evaluate={\ts=int(mod(\i, 4))}] \i in {0,...,7} {
+    \node (ts2\i) [timeslot] at (\i, 2) {};
+    }
+    }
+    \foreach [evaluate={\ts=int(mod(\i, 4))}] \i in {0,...,7} {
+    \node (ts1\i) [timeslot] at (\i, 1) {};
+    }
+    \foreach [evaluate={\ts=int(mod(\i, 4))}] \i in {0,...,7} {
+    \node (ts\i) [asn] at (\i, 0) {$TS_{\ts}$};
+    }
+
+    \only<2->{
+    \node (choff3) [black!70] at (-1.5, 3) {$Ch_{off} 2$};
+    \node (choff2) [black!70] at (-1.5, 2) {$Ch_{off} 1$};
+    \node (choff1) [black!70] at (-1.5, 1) {$Ch_{off} 0$};
+    }
+
+    \begin{scope}[on background layer]
+    \only<2->{
+    \fill[green!50] (ts22.south west) rectangle (ts22.north east);
+    \fill[green!50] (ts36.south west) rectangle (ts36.north east);
+
+    \fill[orange!50] (ts30.south west) rectangle (ts30.north east);
+    \fill[orange!50] (ts14.south west) rectangle (ts14.north east);
+
+    \fill[blue!50] (ts24.south west) rectangle (ts24.north east);
+    }
+
+    \fill[blue!50] (ts10.south west) rectangle (ts10.north east);
+    \end{scope}
+
+    \only<2->{
+        \draw[ultra thick]
+        (ts10.south west) rectangle (ts33.north east)
+        (ts14.south west) rectangle (ts37.north east);
+    }
+    \only<1>{
+        \draw[ultra thick]
+        (ts10.south west) rectangle (ts13.north east)
+        (ts14.south west) rectangle (ts17.north east);
+    }
+
+    \draw[arr,->]
+    ([yshift=-10pt]ts0.south west) -- node[fill=white] {$time$} ([yshift=-10pt]{ts7.south east});
+
+  \begin{scope}[xshift=2.5cm,yshift=-3cm,->,>=stealth',shorten >=1pt,auto,node distance=2.5cm]
+    \tikzstyle{every state}=[thick,draw=gray!50,fill=gray!20,draw=none,text=black]
+
+    \node[state]         (A) [] {A};
+    \node[state]         (B) [below of=A]       {B};
+    \node[state]         (C) [right of=B]       {C};
+
+    \only<2-> {
+      \path (A) edge [bend left,draw=orange!50] node[draw=orange!50] {$TS_1$} (C)
+          (B) edge [bend left,draw=blue!50] node[draw=blue!50] {$TS_1$} (A)
+          (C) edge [bend left,draw=green!50] node[above right,draw=green!50] {$TS_3$} (A);
+    }
+    \only<1> {
+      \path (B) edge [bend left,draw=blue!50] node[draw=blue!50] {$TS_1$} (A);
+    }
+  \end{scope}
+\end{tikzpicture}
+}
+\caption{TSCH Schedule\label{fig:customsched}}
+\end{figure}
+\end{column}
+\end{columns}
 \end{frame}
 
 \begin{frame}{Approach}
-\framesubtitle{Time Slots}
+\framesubtitle{TSCH - Time Slots}
 
-\begin{itemize}
-    \item 
-\end{itemize}
+\resizebox{10cm}{4.6cm}{%
+\begin{tikzpicture}[
+  timeslot/.style={draw, rectangle, minimum size=1cm},
+  description/.style={draw, rectangle, minimum size=1cm},
+  arr/.style={help lines,black!70,<->},
+]
+
+\foreach [evaluate={\ts=int(mod(\i, 4))}] \i in {0,...,7} {
+  \node (ts\i) [timeslot] at (\i, 0) {$TS_{\ts}$};
+}
+\node (ts8) [minimum height=1cm, minimum width=2cm, black!70] at (8.5, 0) {\ldots};
+
+\draw[help lines, black!70]
+  (ts8.north west) -- (ts8.north east) node[fill=white, black!70] {$\ldots$};
+\draw[help lines, black!70]
+  (ts8.south west) -- (ts8.south east) node[fill=white, black!70] {$\ldots$};
+
+\draw[ultra thick] 
+  (ts0.south west) rectangle (ts3.north east)
+  (ts4.south west) rectangle (ts7.north east);
+
+\draw[arr]
+  ([yshift=10pt]ts0.north west) -- node[fill=white] {$SF0$} ([yshift=10pt]{ts3.north east});
+\draw[arr]
+  ([yshift=10pt]ts4.north west) -- node[fill=white] {$SF1$} ([yshift=10pt]{ts7.north east});
+\draw[arr]
+  ([yshift=10pt]ts8.north west) -- node[fill=white] {$SF\ldots$} ([yshift=10pt]{ts8.north east});
+
+\begin{scope}[xshift=-1.2cm,yshift=-2cm,inner sep=0pt, outer sep=0pt]
+  \node (desc) [fit={(-2.5,0) (0,1)}, label=center:{Transmitter}] {};
+  \node (desc0) [description, fit={(0,0) (3,1)}, label=center:{tx\_offset}] {};
+  \node (desc1) [description, fit={(3,0) (6,1)}, label=center:{max\_tx}] {};
+  \node (desc2) [description, fit={(6,0) (9,1)}, label=center:{rx\_ack\_delay}] {};
+  \node (desc3) [description, fit={(9,0) (12,1)}, label=center:{max\_ack}] {};
+\end{scope}
+
+\draw[help lines, black!70,-]
+  ([yshift=0pt]ts4.south west) -- 
+  ([yshift=0pt]{desc0.north west});
+\draw[help lines, black!70,-]
+  ([yshift=0pt]ts4.south east) -- 
+  ([yshift=0pt]{desc3.north east});
+
+\begin{scope}[xshift=-1.2cm,yshift=-3.5cm,inner sep=0pt, outer sep=0pt]
+  \node (ddesc) [fit={(-2.5,0) (0,1)}, label=center:{Receiver}] {};
+  \node (ddesc0) [description, fit={(0,0) (3,1)}, label=center:{rx\_offset}] {};
+  \node (ddesc1) [description, fit={(3,0) (6,1)}, label=center:{rx\_wait}] {};
+  \node (ddesc2) [description, fit={(6,0) (9,1)}, label=center:{tx\_ack\_delay}] {};
+  \node (ddesc3) [description, fit={(9,0) (12,1)}, label=center:{max\_ack}] {};
+\end{scope}
+
+\draw[help lines, black!70,-]
+  ([yshift=0pt]desc0.south west) -- 
+  ([yshift=0pt]{ddesc0.north west});
+\draw[help lines, black!70,-]
+  ([yshift=0pt]desc3.south east) -- 
+  ([yshift=0pt]{ddesc3.north east});
+
+\end{tikzpicture}
+}
 \end{frame}
 
 \begin{frame}{Approach}
-\framesubtitle{Channel Hopping}
+\framesubtitle{TSCH - Channel Hopping}
 
 \begin{itemize}
     \item 
