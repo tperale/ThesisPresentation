@@ -127,7 +127,7 @@ Made for IEEE802.15.4 Phy
 \begin{frame}{Approach}
 \framesubtitle{TSCH - Time Slots}
 
-\resizebox{10cm}{4.6cm}{%
+\resizebox{11.2cm}{3.8cm}{%
 \begin{tikzpicture}[
   timeslot/.style={draw, rectangle, minimum size=1cm},
   description/.style={draw, rectangle, minimum size=1cm},
@@ -148,42 +148,40 @@ Made for IEEE802.15.4 Phy
   (ts0.south west) rectangle (ts3.north east)
   (ts4.south west) rectangle (ts7.north east);
 
-\draw[arr]
-  ([yshift=10pt]ts0.north west) -- node[fill=white] {$SF0$} ([yshift=10pt]{ts3.north east});
-\draw[arr]
-  ([yshift=10pt]ts4.north west) -- node[fill=white] {$SF1$} ([yshift=10pt]{ts7.north east});
-\draw[arr]
-  ([yshift=10pt]ts8.north west) -- node[fill=white] {$SF\ldots$} ([yshift=10pt]{ts8.north east});
-
-\begin{scope}[xshift=-1.2cm,yshift=-2cm,inner sep=0pt, outer sep=0pt]
-  \node (desc) [fit={(-2.5,0) (0,1)}, label=center:{Transmitter}] {};
-  \node (desc0) [description, fit={(0,0) (3,1)}, label=center:{tx\_offset}] {};
-  \node (desc1) [description, fit={(3,0) (6,1)}, label=center:{max\_tx}] {};
-  \node (desc2) [description, fit={(6,0) (9,1)}, label=center:{rx\_ack\_delay}] {};
-  \node (desc3) [description, fit={(9,0) (12,1)}, label=center:{max\_ack}] {};
+\begin{scope}[xshift=-1.2cm,yshift=-2.5cm,inner sep=0pt, outer sep=0pt]
+  \node (desc) [draw,rectangle,fit={(0,0) (14,1)}, label=left:{Transmitter~}] {};
+  \node (desc1) [description, fill=orange!20, fit={(3,0) (6,1)}, label=center:{data}] {};
+  \node (desc0) [description, fill=gray!20, fit={(1,0) (3,1)}, label=center:{tx\_offset}] {};
+  \node (descsync1) [description, fill=blue!20, fit={(6.7,0) (7,1)}] {};
+  \node (descsync2) [description, fill=blue!20, fit={(9.5,0) (9.8,1)}] {};
+  \node (desc2) [description, fill=gray!20, fit={(7,0) (9.5,1)}, label=center:{rx\_ack\_delay}] {};
 \end{scope}
 
 \draw[help lines, black!70,-]
   ([yshift=0pt]ts4.south west) -- 
-  ([yshift=0pt]{desc0.north west});
+  ([yshift=0pt]{desc.north west});
 \draw[help lines, black!70,-]
   ([yshift=0pt]ts4.south east) -- 
-  ([yshift=0pt]{desc3.north east});
+  ([yshift=0pt]{desc.north east});
 
-\begin{scope}[xshift=-1.2cm,yshift=-3.5cm,inner sep=0pt, outer sep=0pt]
-  \node (ddesc) [fit={(-2.5,0) (0,1)}, label=center:{Receiver}] {};
-  \node (ddesc0) [description, fit={(0,0) (3,1)}, label=center:{rx\_offset}] {};
-  \node (ddesc1) [description, fit={(3,0) (6,1)}, label=center:{rx\_wait}] {};
-  \node (ddesc2) [description, fit={(6,0) (9,1)}, label=center:{tx\_ack\_delay}] {};
-  \node (ddesc3) [description, fit={(9,0) (12,1)}, label=center:{max\_ack}] {};
+\begin{scope}[xshift=-1.2cm,yshift=-4.5cm,inner sep=0pt, outer sep=0pt]
+  \node (ddesc) [draw,rectangle,fit={(0,0) (14,1)}, label=left:{Receiver~}] {};
+  \node (ddescsync1) [description, fill=blue!20, fit={(0.7,0) (1,1)}] {};
+  \node (ddescsync2) [description, fill=blue!20, fit={(3,0) (3.3,1)}] {};
+  \node (ddesc0) [description, fill=gray!20, fit={(1,0) (3,1)}, label=center:{rx\_offset}] {};
+  \node (ddesc2) [description, fill=gray!20, fit={(7,0) (9.5,1)}, label=center:{tx\_ack\_delay}] {};
+  \node (ddesc3) [description, fill=orange!20, fit={(9.5,0) (12,1)}, label=center:{ack}] {};
 \end{scope}
 
 \draw[help lines, black!70,-]
-  ([yshift=0pt]desc0.south west) -- 
-  ([yshift=0pt]{ddesc0.north west});
+    (desc.south west) -- ({ddesc.north west});
 \draw[help lines, black!70,-]
-  ([yshift=0pt]desc3.south east) -- 
-  ([yshift=0pt]{ddesc3.north east});
+    (desc.south east) -- ({ddesc.north east});
+
+\draw[arr,<->]
+    ([yshift=-10pt]descsync1.south west) -- node[fill=white] {$guard$} ([yshift=-10pt]{descsync2.south east});
+\draw[arr,<->]
+    ([yshift=-10pt]ddescsync1.south west) -- node[fill=white] {$guard$} ([yshift=-10pt]{ddescsync2.south east});
 
 \end{tikzpicture}
 }
