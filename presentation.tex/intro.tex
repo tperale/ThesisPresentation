@@ -28,53 +28,7 @@
 \begin{frame}{Introduction}
 \framesubtitle{Low Power Wide Area Network (LPWAN)}
 
-\begin{columns}
-\begin{column}{0.3\textwidth}
-\only<1>{
-Short-range
-\begin{itemize}
-    \item Low power
-    \item Small range
-    \item Low cost
-    \item Low data-rate
-    % \item Built for IoT
-\end{itemize}
-}
-\only<2>{
-WiFi
-\begin{itemize}
-    \item Small range
-    \item High data-rate
-\end{itemize}
-}
-\only<3>{
-Cellular
-\begin{itemize}
-    \item Long range
-    \item High deployement cost
-    \item High data-rate
-\end{itemize}
-}
-\only<4>{
-LPWAN
-\begin{itemize}
-    \item Low power
-    \item Long range
-    \item Low cost
-    \item Low data-rate
-    \item Built for IoT
-    % \begin{itemize}
-    %     \item Large scale monitoring
-    %     \item Battery operated
-    % \end{itemize}
-\end{itemize}
-}
-\end{column}
-\begin{column}{0.7\textwidth}
-
-\begin{figure}[H] % TODO More info on axis
-\centering
-  \resizebox{7.8cm}{4cm}{%
+\resizebox{9.8cm}{5.1cm}{%
   \begin{tikzpicture}
     \draw[->,thick] (-0.1,0)--(12,0) node[right]{Range};
     \draw[->,thick] (0,-0.1)--(0,8) node[above]{Data Rate};
@@ -98,14 +52,12 @@ LPWAN
     \node[] at (-1.2, 7) {1 Gbit/sec};
     \draw[] (-0.1,7)--(0.1,7);
 
-    \only<4->{
-    \node[draw,fill=white, visible on=<4->] at (8,1.5) (lora) {LoRa};
-    \node[draw,fill=white, visible on=<4->] at (8.7,0.8) (sigfox) {SigFox};
-    \node[draw,fill=white, visible on=<4->] at (7.4,2.2) (nb) {NB-IOT};
+    \node[draw,fill=white] at (8,1.5) (lora) {LoRa};
+    \node[draw,fill=white] at (8.7,0.8) (sigfox) {SigFox};
+    \node[draw,fill=white] at (7.4,2.2) (nb) {NB-IOT};
     \begin{scope}[on background layer]
-      \node[draw,fill=blue!30,fit=(lora) (sigfox) (nb), label=above:{LPWAN}, visible on=<4->] {};
+      \node[draw,fill=blue!30,fit=(lora) (sigfox) (nb), label=above:{LPWAN}] {};
     \end{scope}
-    }
 
     \node[draw,fill=white] at (2.2,3.5) (bluetooth) {Bluetooth};
     \node[draw,fill=white] at (2.7,2.5) (zigbee) {ZigBee};
@@ -114,40 +66,37 @@ LPWAN
       \node[draw,fill=blue!10,fit=(bluetooth) (zigbee) (ble), label=above:{Short-range}] {};
     \end{scope}
 
-    \only<2->{
-    \node[draw,fill=white, visible on=<2->] at (3,5) (wifi) {WiFi};
+    \node[draw,fill=white] at (3,5) (wifi) {WiFi};
     \begin{scope}[on background layer]
-      \node[draw,fill=blue!50,fit=(wifi), visible on=<2->] {};
+      \node[draw,fill=blue!50,fit=(wifi)] {};
     \end{scope}
-    }
 
-    \only<3->{
-    \node[draw,fill=white, visible on=<3->] at (6.8,5) (lte) {LTE};
-    \node[draw,fill=white, visible on=<3->] at (5.8,6) (5g) {5G};
+    \node[draw,fill=white] at (6.8,5) (lte) {LTE};
+    \node[draw,fill=white] at (5.8,6) (5g) {5G};
     \begin{scope}[on background layer]
-      \node[draw,fill=blue!60,fit=(lte) (5g), label=above:{Cellular}, visible on=<3->] {};
+      \node[draw,fill=blue!60,fit=(lte) (5g), label=above:{Cellular}] {};
     \end{scope}
-    }
 
     \node[] at (6.9,8.2) (leg5) {\small Low};
     \node[draw,fill=blue!10] at (7.5,8.2) (leg1) {};
     \node[draw,fill=blue!30] at (7.8,8.2) (leg2) {};
     \node[draw,fill=blue!50] at (8.1,8.2) (leg3) {};
     \node[draw,fill=blue!60] at (8.4,8.2) (leg4) {};
-    \node[] at (10.7,8.2) (leg5) {\small High Power Consumption};
+, visible on=<4->    \node[] at (10.7,8.2) (leg5) {\small High Power Consumption};
 \end{tikzpicture}
-  }
-\caption{Comparison of IoT technologies}
-\label{fig:commrangegraph}
-\end{figure}
-\end{column}
-\end{columns}
+}
 \end{frame}
 
 \begin{frame}{Introduction}
 \framesubtitle{LoRa}
 \begin{itemize}
-  \item 
+  \item Proprietary Modulation Technique
+  \begin{itemize}
+    \item Owned by Semtech
+  \end{itemize}
+  \item Chirp Spread Spectrum (CSS)
+  \item Range of around ~15km
+  \item Very low data-rate
 \end{itemize}
 \end{frame}
 
@@ -179,8 +128,10 @@ LPWAN
         \node[gateways] (\name) at \place {};
       \node[server] (d) at (1.5,-1.5) {};
       %
+      \begin{scope}[on background layer]
       \foreach \source/\dest in {a/d, b/d}
         \path[] (\source) edge (\dest);
+      \end{scope}
 
       % Place normal peers
       \foreach \pos/\i in {above left of/1, left of/2, below left of/3}

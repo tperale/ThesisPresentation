@@ -4,7 +4,8 @@
 \usepackage{multicol,lipsum,microtype}
 % \usepackage[xcdraw,dvipsnames]{xcolor}
 % \usepackage[backend=biber]{biblatex}
-% \addbibresource{./prensentation.tex/bib/main.bib}
+\usepackage[natbib=true,style=verbose,backend=bibtex,useprefix=true]{biblatex}
+\addbibresource{presentation.tex/bib/main.bib}
 \usepackage{listings}
 \usepackage{lstautogobble}  % Fix relative indenting
 \usepackage{xargs}
@@ -52,6 +53,7 @@
 \usetikzlibrary{arrows,automata}
 \usetikzlibrary{backgrounds,calc,shadings,shadows}
 \usepackage{circuitikz}
+\usetikzlibrary{patterns}
 \usetikzlibrary{shapes,decorations.pathreplacing}
 
 \tikzstyle{bag} = [align=center]
@@ -281,7 +283,7 @@
                % for titles), and the VUB colors. Also includes the triangle.
 \usetheme[coloredtitles]{vub}
 %\usetheme[showsection]{vub}
-\title{Enabling~IPv6~multi-hop~networks with~Time Slotted~Channel~Hopping and~long~range~LoRA~radios} % Can be omitted
+\title{Enabling~IPv6~multi-hop~networks with~Time~Slotted~Channel~Hopping and~long~range~LoRA~radios} % Can be omitted
 \subtitle{Promotors: Prof. Dr. Ir. Kris Steenhaut\newline Prof. Dr. Ir. Elisa Gonzalez Boix\newline Supervisor: Roald Van Glabbeek}
 \author{Thomas Perale}
 
@@ -321,11 +323,27 @@
   \centering
   \LARGE
   \vubfont
-  ~Problem
+  ~LoRaWAN issues
 \end{frame}
 }
 
 \input{presentation.tex/problem.tex}
+
+\section{Solution}
+
+{
+  \setbeamercolor{background canvas}{bg=vubbleu}
+  \setbeamercolor{normal text}{fg=white}
+  \usebeamercolor*{normal text}
+\begin{frame}[c]{}
+  \centering
+  \LARGE
+  \vubfont
+  ~Solving LoRaWAN issues with multi-hop networks
+\end{frame}
+}
+
+\input{presentation.tex/solution.tex}
 
 \section{Approach}
 
@@ -343,7 +361,7 @@
 
 \input{presentation.tex/approach.tex}
 
-\section{Test and Validation}
+\section{Realization and Validation}
 
 {
   \setbeamercolor{background canvas}{bg=vubbleu}
@@ -353,7 +371,7 @@
   \centering
   \LARGE
   \vubfont
-  ~Test and Validation
+  ~Realization and Validation
 \end{frame}
 }
 
@@ -377,7 +395,19 @@
 \framesubtitle{}
 
 \begin{itemize}
-  \item
+  \item Multi-hop
+  \begin{itemize}
+    \item Improved range
+  \end{itemize}
+  \item Reliable
+  \begin{itemize}
+    \item Channel hopping
+  \end{itemize}
+  \item Power efficient
+  \begin{itemize}
+    \item Synchronization
+    \item Time division
+  \end{itemize}
 \end{itemize}
 
 \end{frame}
@@ -391,7 +421,7 @@
   \centering
   \LARGE
   \vubfont
-  ~Questions
+  ~Questions~?
 \end{frame}
 }
 

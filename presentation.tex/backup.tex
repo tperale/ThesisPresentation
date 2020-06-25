@@ -92,4 +92,63 @@
 }
 \end{frame}
 
+\begin{frame}{++}
+\framesubtitle{Hardware Delay}
+
+\resizebox{11.2cm}{3.8cm}{%
+\begin{tikzpicture}[
+  timeslot/.style={draw, rectangle, minimum size=1cm},
+  description/.style={draw, rectangle, minimum size=1cm},
+  arr/.style={help lines,black!70,<->},
+]
+
+\foreach [evaluate={\ts=int(mod(\i, 4))}] \i in {0,...,7} {
+  \node (ts\i) [timeslot] at (\i, 0) {$TS_{\ts}$};
+}
+\node (ts8) [minimum height=1cm, minimum width=2cm, black!70] at (8.5, 0) {\ldots};
+
+\draw[help lines, black!70]
+  (ts8.north west) -- (ts8.north east) node[fill=white, black!70] {$\ldots$};
+\draw[help lines, black!70]
+  (ts8.south west) -- (ts8.south east) node[fill=white, black!70] {$\ldots$};
+
+\draw[ultra thick] 
+  (ts0.south west) rectangle (ts3.north east)
+  (ts4.south west) rectangle (ts7.north east);
+
+\begin{scope}[xshift=-1.2cm,yshift=-2.5cm,inner sep=0pt, outer sep=0pt]
+  \node (desc) [draw,rectangle,fit={(0,0) (14,1)}, label=left:{Transmitter~}] {};
+  \node (desc1) [description, fill=orange!20, fit={(3,0) (6,1)}, label=center:{data}] {};
+  \node (desc0) [description, fill=gray!20, fit={(1,0) (3,1)}, label=center:{tx\_offset}] {};
+  \node (descsync1) [description, fill=blue!20, fit={(6.7,0) (7,1)}] {};
+  \node (descsync2) [description, fill=blue!20, fit={(9.5,0) (9.8,1)}] {};
+  \node (desc2) [description, fill=gray!20, fit={(7,0) (9.5,1)}, label=center:{rx\_ack\_delay}] {};
+  \draw[pattern=north west lines, pattern color=green!50] (2.6,0) rectangle (3,1);
+\end{scope}
+
+\draw[help lines, black!70,-]
+  ([yshift=0pt]ts4.south west) -- 
+  ([yshift=0pt]{desc.north west});
+\draw[help lines, black!70,-]
+  ([yshift=0pt]ts4.south east) -- 
+  ([yshift=0pt]{desc.north east});
+
+\begin{scope}[xshift=-1.2cm,yshift=-4.5cm,inner sep=0pt, outer sep=0pt]
+  \node (ddesc) [draw,rectangle,fit={(0,0) (14,1)}, label=left:{Receiver~}] {};
+  \node (ddescsync1) [description, fill=blue!20, fit={(0.7,0) (1,1)}] {};
+  \node (ddescsync2) [description, fill=blue!20, fit={(3,0) (3.3,1)}] {};
+  \node (ddesc0) [description, fill=gray!20, fit={(1,0) (3,1)}, label=center:{rx\_offset}] {};
+  \node (ddesc2) [description, fill=gray!20, fit={(7,0) (9.5,1)}, label=center:{tx\_ack\_delay}] {};
+  \node (ddesc3) [description, fill=orange!20, fit={(9.5,0) (12,1)}, label=center:{ack}] {};
+  \draw[pattern=north west lines, pattern color=green!50] (6,0) rectangle (6.4,1);
+\end{scope}
+
+\draw[help lines, black!70,-]
+    (desc.south west) -- ({ddesc.north west});
+\draw[help lines, black!70,-]
+    (desc.south east) -- ({ddesc.north east});
+\end{tikzpicture}
+}
+\end{frame}
+
 
