@@ -1,4 +1,4 @@
-\begin{frame}{Realization}
+\begin{frame}{Implementation}
 \framesubtitle{Setup}
 \begin{columns}
 \begin{column}{0.5\textwidth}
@@ -19,7 +19,7 @@
 \end{columns}
 \end{frame}
 
-\begin{frame}{Realization}
+\begin{frame}{Implementation}
 \framesubtitle{Driver}
 
 \begin{columns}
@@ -33,7 +33,7 @@
 \begin{column}{0.5\textwidth}
 \begin{figure}[H]
 \centering
-\resizebox{4.6cm}{5.3cm}{%
+\resizebox{4.8cm}{5.3cm}{%
 \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=1.6cm]
 \tikzstyle{comment}=[
   right=2pt,
@@ -71,16 +71,19 @@
 \end{columns}
 \end{frame}
 
-\begin{frame}{Realization}
+\begin{frame}{Implementation}
 \framesubtitle{Adapt TSCH for LoRa}
 \begin{columns}
 \begin{column}{0.5\textwidth}
 TSCH for LoRa porting issues
 \begin{itemize}
     \item Time slot parts timing 
-    \item Adaptation to 64bits
-    \item Interrupt clash
-    \item Watchdog
+    \item Issues
+    \begin{itemize}
+      \item Adaptation to 32 bits
+      \item Interrupt clash
+      \item Watchdog
+   \end{itemize}
 \end{itemize}
 \end{column}
 \begin{column}{0.5\textwidth}
@@ -142,7 +145,7 @@ TSCH for LoRa porting issues
 \end{columns}
 \end{frame}
 
-\begin{frame}{Realization}
+\begin{frame}{Implementation}
 \framesubtitle{Adapt TSCH for LoRa}
 \begin{columns}
 \begin{column}{0.5\textwidth}
@@ -238,40 +241,63 @@ Hardware specific issues
 \end{columns}
 \end{frame}
 
+% \begin{frame}{Validation}
+% \framesubtitle{Driver}
+% \begin{columns}
+% \begin{column}{0.5\textwidth}
+% \begin{itemize}
+%     \item Validate the LoRa Driver
+%     \item Ping-Pong example
+%     \item Driver controlled by MAC layer
+%     \begin{itemize}
+%       \item Fully working on Contiki
+%     \end{itemize}
+% \end{itemize}
+% \end{column}
+% \begin{column}{0.5\textwidth}
+% \begin{figure}[H]
+% \centering
+% \begin{sequencediagram}
+% \newthread{A}{Mote A}{}
+% \newinst[1]{B}{Mote B}{}
+
+% \begin{call}[4]{A}{ping}{B}{pong}
+% \end{call}
+% \end{sequencediagram}
+% \end{figure}
+% \end{column}
+% \end{columns}
+% \end{frame}
+
 \begin{frame}{Validation}
-\framesubtitle{Driver}
-\begin{columns}
-\begin{column}{0.5\textwidth}
-\begin{itemize}
-    \item Basic Ping-Pong example
-    \item Driver controlled by MAC layer
-    \begin{itemize}
-      \item Fully working on Contiki
-    \end{itemize}
-\end{itemize}
-\end{column}
-\begin{column}{0.5\textwidth}
+\framesubtitle{RPL}
 \begin{figure}[H]
 \centering
-\begin{sequencediagram}
-\newthread{A}{Mote A}{}
-\newinst[1]{B}{Mote B}{}
-
-\begin{call}[4]{A}{ping}{B}{pong}
-\end{call}
-\end{sequencediagram}
+\resizebox{4.8cm}{5.3cm}{%
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=1.6cm]
+  \tikzstyle{comment}=[ right=2pt, font=\small, fill=white, text=black, draw=black, ]
+  \tikzstyle{every state}=[rectangle,thick, draw=black,fill=gray!20,text=black, minimum width= 6cm, minimum height= 1.20cm ]
+  \tikzstyle{smallstate}=[rectangle,thick, draw=black,fill=gray!10,text=black, minimum width= 4cm, minimum height= 1.20cm ]
+  \node[smallstate]         (A)                    {IPv6};
+  \node[smallstate]         (B) [below of=A]       {RPL Lite};
+  \begin{scope}[on background layer]
+    \node[state, fit=(A)(B)] (AB)                 {};
+  \end{scope}
+  \node[state,below=1cm]         (C) [below of=AB]       {TSCH};
+  \node[state]         (D) [below of=C]       {LoRa};
+  \node[comment]       at (AB.north west) {Network Layer};
+  \node[comment]       at (C.north west) {MAC Layer};
+  \node[comment]       at (D.north west) {Physical Layer};
+\end{tikzpicture}
+}
 \end{figure}
-\end{column}
-\end{columns}
 \end{frame}
-
-
 
 \begin{frame}{Validation}
 \framesubtitle{RPL}
 \begin{figure}[H]
     \centering
-    \resizebox{9.2cm}{4.5cm}{%
+    \resizebox{9.4cm}{4.5cm}{%
   \begin{tikzpicture}[]
 
   \begin{scope}[
@@ -284,21 +310,21 @@ Hardware specific issues
       \node (ts\i) [asn] at (2*\i, 1) {$TS_{\i}$};
     }
     \node (tss0) [timeslot] at (0, 0) {\tiny Shared};
-    \node (tss1) [timeslot] at (2, 0) {\tiny :2dac $\rightarrow$ :2f2a};
-    \node (tss2) [timeslot] at (4, 0) {\tiny :2dbc $\rightarrow$ :2f2a};
-    \node (tss3) [timeslot] at (6, 0) {\tiny :2dbc $\rightarrow$ :2dac};
-    \node (tss4) [timeslot] at (8, 0) {\tiny :2f2a $\rightarrow$ :2dbc};
-    \node (tss5) [timeslot] at (10, 0) {\tiny :2f09 $\rightarrow$ :2dac};
-    \node (tss6) [timeslot] at (12, 0) {\tiny :2dac $\rightarrow$ :2f09};
+    \node (tss1) [timeslot] at (2, 0) {\tiny B $\rightarrow$ A};
+    \node (tss2) [timeslot] at (4, 0) {\tiny C $\rightarrow$ A};
+    \node (tss3) [timeslot] at (6, 0) {\tiny C $\rightarrow$ B};
+    \node (tss4) [timeslot] at (8, 0) {\tiny A $\rightarrow$ C};
+    \node (tss5) [timeslot] at (10, 0) {\tiny D $\rightarrow$ B};
+    \node (tss6) [timeslot] at (12, 0) {\tiny B $\rightarrow$ D};
     \node (tss7) [timeslot, fill=black!30] at (14, 0) {};
   \end{scope}
-  \begin{scope}[xshift=5cm,yshift=-2cm,->,>=stealth',shorten >=1pt,auto,node distance=2.5cm]
+  \begin{scope}[xshift=7.2cm,yshift=-2cm,->,>=stealth',shorten >=1pt,auto,node distance=2.5cm]
     \tikzstyle{every state}=[thick,draw=gray!50,fill=gray!20,draw=none,text=black]
 
-    \node[state,thick,draw=red!40]         (A) [] {:2f2a};
-    \node[state]         (B) [below of=A]       {:2dac};
-    \node[state]         (C) [right of=B]       {:2dbc};
-    \node[state]         (D) [left of=B]       {:2f09};
+    \node[state,thick,draw=red!40]         (A) [] {A};
+    \node[state]         (B) [below of=A]       {B};
+    \node[state]         (C) [right of=B]       {C};
+    \node[state]         (D) [left of=B]       {D};
 
     \path (A) edge [bend left] node {$TS_4$} (C)
           (B) edge [bend left] node {$TS_1$} (A)
@@ -309,7 +335,6 @@ Hardware specific issues
   \end{scope}
 \end{tikzpicture}
 }
-\caption{Custom Schedule\label{fig:customsched}}
 \end{figure}
 \end{frame}
 
@@ -322,10 +347,10 @@ Hardware specific issues
   \begin{scope}[xshift=5cm,yshift=-2cm,->,>=stealth',shorten >=1pt,auto,node distance=2.5cm]
     \tikzstyle{every state}=[thick,draw=gray!50,fill=gray!20,draw=none,text=black]
 
-    \node[state]         (A) [] {:2f2a};
-    \node[state]         (B) [below left of=A]       {:2dac};
-    \node[state]         (C) [below right of=A]       {:2dbc};
-    \node[state]         (D) [below left of=B]       {:2f09};
+    \node[state]         (A) [] {A};
+    \node[state]         (B) [below left of=A]       {B};
+    \node[state]         (C) [below right of=A]       {C};
+    \node[state]         (D) [below left of=B]       {D};
 
     \path (A) edge  node {$TS_4$} (C);
     \path (B) edge  node {$TS_1$} (A);
@@ -358,7 +383,52 @@ Hardware specific issues
 \draw[-stealth,line width=1mm] (ttx.south) to[zigzag] +(0,-1.5);
 \end{tikzpicture}
 
-\caption{Structure of the channel jamming test\label{fig:jammer}}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Validation}
+\framesubtitle{Jamming}
+\begin{figure}[H]
+  \centering
+  \scalebox{0.8}{%
+  \begin{tikzpicture}[
+    asn/.style={black!70, minimum size=1cm},
+    timeslot/.style={draw, rectangle, minimum size=1cm},
+    arr/.style={help lines,black!70,<->},
+    desc/.style={black!70},
+  ]
+    \foreach [evaluate={\ts=int(mod(\i, 4))}] \i in {0,...,11} {
+    \node (3ts\i) [timeslot] at (\i, 3) {};
+    }
+    \foreach [evaluate={\ts=int(mod(\i, 4))}] \i in {0,...,11} {
+    \node (2ts\i) [timeslot] at (\i, 2) {};
+    }
+    \foreach [evaluate={\ts=int(mod(\i, 4))}] \i in {0,...,11} {
+    \node (1ts\i) [timeslot] at (\i, 1) {};
+    }
+    \foreach [evaluate={\ts=int(mod(\i, 4))}] \i in {0,...,11} {
+    \node (0ts\i) [asn] at (\i, 0) {$TS_{\ts}$};
+    }
+
+    \node (choff3) [black!70] at (-1.5, 3) {$Ch_{off} 2$};
+    \node (choff2) [black!70] at (-1.5, 2) {$Ch_{off} 1$};
+    \node (choff1) [black!70] at (-1.5, 1) {$Ch_{off} 0$};
+
+    \begin{scope}[on background layer]
+    \fill[blue!50] (3ts8.south west) rectangle (3ts8.north east);
+    \fill[blue!50] (2ts4.south west) rectangle (2ts4.north east);
+    \fill[blue!50] (1ts0.south west) rectangle (1ts0.north east);
+    \end{scope}
+
+    \draw[ultra thick]
+        (1ts0.south west) rectangle (3ts3.north east)
+        (1ts4.south west) rectangle (3ts7.north east)
+        (1ts7.south west) rectangle (3ts11.north east);
+    \draw[arr,->] ([yshift=-10pt]0ts0.south west) -- node[fill=white] {$time$} ([yshift=-10pt]{0ts11.south east});
+
+    \draw[pattern=north west lines, pattern color=red!90] (1ts0.north west) rectangle (1ts11.south east);
+  \end{tikzpicture}
+  }
 \end{figure}
 \end{frame}
 
@@ -442,6 +512,6 @@ Hardware specific issues
     };
   \end{groupplot}
   \end{tikzpicture}
-  \caption{Retransmission per packet\label{fig:retransmission}}
+  % \caption{Retransmission per packet\label{fig:retransmission}}
 \end{figure}
 \end{frame}

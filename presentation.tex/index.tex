@@ -55,6 +55,10 @@
 \usepackage{circuitikz}
 \usetikzlibrary{patterns}
 \usetikzlibrary{shapes,decorations.pathreplacing}
+\let\oldfootnotesize\footnotesize
+\renewcommand*{\footnotesize}{\oldfootnotesize\tiny}
+\usepackage{caption}
+\captionsetup[figure]{labelformat=empty}% redefines the caption setup of the figures environment in the beamer class.
 
 \tikzstyle{bag} = [align=center]
 
@@ -290,25 +294,25 @@
 \begin{document}
 \frame{\maketitle} % Automatic titlepage with VUB logo.
 
-\begin{frame}{Table of Content}
-    % We are going to start at a very high level overview to then dig into the
-    % more detailled aspect of LoRa.
-    \tableofcontents
-\end{frame}
+% \begin{frame}{Table of Content}
+%     % We are going to start at a very high level overview to then dig into the
+%     % more detailled aspect of LoRa.
+%     \tableofcontents
+% \end{frame}
 
-\section{Introduction}
+% \section{Introduction}
 
-{
-  \setbeamercolor{background canvas}{bg=vubbleu}
-  \setbeamercolor{normal text}{fg=white}
-  \usebeamercolor*{normal text}
-\begin{frame}[c]{}
-  \centering
-  \LARGE
-  \vubfont
-  ~Introduction
-\end{frame}
-}
+% {
+%   \setbeamercolor{background canvas}{bg=vubbleu}
+%   \setbeamercolor{normal text}{fg=white}
+%   \usebeamercolor*{normal text}
+% \begin{frame}[c]{}
+%   \centering
+%   \LARGE
+%   \vubfont
+%   ~Introduction
+% \end{frame}
+% }
 
 \input{presentation.tex/intro.tex}
 
@@ -323,7 +327,7 @@
   \centering
   \LARGE
   \vubfont
-  ~LoRaWAN issues
+  ~Three LoRaWAN issues
 \end{frame}
 }
 
@@ -345,6 +349,22 @@
 
 \input{presentation.tex/solution.tex}
 
+\section{Research Training}
+
+{
+  \setbeamercolor{background canvas}{bg=vubbleu}
+  \setbeamercolor{normal text}{fg=white}
+  \usebeamercolor*{normal text}
+\begin{frame}[c]{}
+  \centering
+  \LARGE
+  \vubfont
+  ~Research Training
+\end{frame}
+}
+
+\input{presentation.tex/rt.tex}
+
 \section{Approach}
 
 {
@@ -361,7 +381,7 @@
 
 \input{presentation.tex/approach.tex}
 
-\section{Realization and Validation}
+\section{Implementation and Validation}
 
 {
   \setbeamercolor{background canvas}{bg=vubbleu}
@@ -371,7 +391,7 @@
   \centering
   \LARGE
   \vubfont
-  ~Realization and Validation
+  ~Implementation and Validation
 \end{frame}
 }
 
@@ -395,19 +415,12 @@
 \framesubtitle{}
 
 \begin{itemize}
-  \item Multi-hop
-  \begin{itemize}
-    \item Improved range
-  \end{itemize}
-  \item Reliable
-  \begin{itemize}
-    \item Channel hopping
-  \end{itemize}
+  \item Scalable network
+  \item Improved range
+  \item Reliable multi-hop network
+  \item Resilient to interference 
   \item Power efficient
-  \begin{itemize}
-    \item Synchronization
-    \item Time division
-  \end{itemize}
+  \item Lack of radio usage measurements
 \end{itemize}
 
 \end{frame}

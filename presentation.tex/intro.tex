@@ -1,28 +1,9 @@
 \begin{frame}{Introduction}
 \framesubtitle{IoT}
-\begin{columns}
-\begin{column}{0.6\textwidth}
-\begin{itemize}
-  \item 25 billion devices connected
-  \item Analytics, management
-  \item Multiple Sectors
-  \begin{itemize}
-    \item Transportation
-    \item Smart city
-    \item Smart domotics
-    \item Smart health
-    \item Supply Chain
-    \item Agriculture
-    \item \ldots
-  \end{itemize}
-\end{itemize}
-\end{column}
-\begin{column}{0.4\textwidth}
 \begin{figure}
-\includegraphics[width=0.8\textwidth]{presentation.tex/fig/iot.png}
+\centering
+\includegraphics[width=0.4\textwidth]{presentation.tex/fig/iot.png}
 \end{figure}
-\end{column}
-\end{columns}
 \end{frame}
 
 \begin{frame}{Introduction}
@@ -89,37 +70,50 @@
 
 \begin{frame}{Introduction}
 \framesubtitle{LoRa}
+\begin{columns}
+\begin{column}{0.5\textwidth}
 \begin{itemize}
   \item Proprietary Modulation Technique
   \begin{itemize}
     \item Owned by Semtech
   \end{itemize}
-  \item Chirp Spread Spectrum (CSS)
+  % \item Chirp Spread Spectrum (CSS)
+  % \item Spreading Factors (SF)
+  % \begin{itemize}
+  %   \item $\nearrow$ SF, $\searrow$ Data-rate
+  %   \item $\nearrow$ SF, $\nearrow$ Range
+  % \end{itemize}
   \item Range of around ~15km
+  \item Low-power transmission
   \item Very low data-rate
 \end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[width=0.8\textwidth]{presentation.tex/fig/lora.jpg}
+\end{figure}
+\end{column}
+\end{columns}
 \end{frame}
 
 \begin{frame}{Introduction}
 \framesubtitle{LoRaWAN}
 \begin{columns}
 \begin{column}{0.5\textwidth}
-\begin{itemize}
-    \item Stars-of-stars topology
-    \begin{itemize}
-      \item End-nodes/Motes
-      \item Gateways
-      \item Central Server
-    \end{itemize}
-    \item Direct Link to gateway
-    \item Transmit as soon as possible
-    \begin{itemize}
-      \item Low channel occupation
-      \item Power efficient
-    \end{itemize}
-\end{itemize}
-\end{column}
-\begin{column}{0.5\textwidth}
+% \begin{itemize}
+%     \item Stars-of-stars topology
+%     \begin{itemize}
+%       \item End-nodes/Motes
+%       \item Gateways
+%       \item Central Server
+%     \end{itemize}
+%     \item Direct Link to gateway
+%     \item Transmit as soon as possible
+%     \begin{itemize}
+%       \item Low channel occupation
+%       \item Power efficient
+%     \end{itemize}
+% \end{itemize}
 \begin{figure}[H]
     \centering
     \begin{tikzpicture}[auto, thick]
@@ -147,6 +141,24 @@
       \path[dotted] (a) edge (b3);
     \end{tikzpicture}
     \caption{Star topology\label{fig:startopology}}
+\end{figure}
+
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{figure}[H]
+\centering
+\scalebox{0.8}{%
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=1.6cm]
+  \tikzstyle{comment}=[ right=2pt, font=\small, fill=white, text=black, draw=black, ]
+  \tikzstyle{every state}=[rectangle,thick, draw=black,fill=gray!20,text=black, minimum width= 6cm, minimum height= 1.20cm ]
+  \tikzstyle{smallstate}=[rectangle,thick, draw=black,fill=gray!10,text=black, minimum width= 4cm, minimum height= 1.20cm ]
+  \node[state]         (AB)                 {Application};
+  \node[state]         (C) [below of=AB]       {LoRaWAN};
+  \node[state]         (D) [below of=C]       {LoRa};
+  \node[comment]       at (C.north west) {MAC Layer};
+  \node[comment]       at (D.north west) {Physical Layer};
+\end{tikzpicture}
+}
 \end{figure}
 \end{column}
 \end{columns}

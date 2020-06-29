@@ -1,33 +1,73 @@
-\begin{frame}{Approach}
-\framesubtitle{Multihop Routing}
+% \begin{frame}{Approach}
+% \framesubtitle{Multihop Routing}
+% \begin{itemize}
+%   \item Implementation already exists
+%   \begin{itemize}
+%       \item RPL
+%   \end{itemize}
+%   \item No guaranty on
+%   \begin{itemize}
+%       \item Power efficiency
+%       \item Reliability
+%   \end{itemize}
+%   \item Lack of MAC protocol
+% \end{itemize}
+% \end{frame}
 
+\begin{frame}{Approach}
+\framesubtitle{LoRa Multi-hop Network}
+\begin{columns}
+\begin{column}{0.5\textwidth}
 \begin{itemize}
-    \item Implementation already exists
-    \begin{itemize}
-        \item RPL
-    \end{itemize}
-    \item No guaranty on
-    \begin{itemize}
-        \item Power efficiency
-        \item Reliability
-    \end{itemize}
-    \item Lack of MAC protocol
+  \item LoRa multi-hop network
+  \begin{itemize}
+    \item Long range
+    \item Power efficient
+    \item Reliable
+  \end{itemize}
+  \item Using RPL
+  \item Porting TSCH
+  \begin{itemize}
+    \item No implementation for LoRa
+  \end{itemize}
+  \item Contiki as starting point
+  \item Radio driver for LoRa
 \end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{figure}[H]
+\centering
+\resizebox{4.8cm}{5.3cm}{%
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=1.6cm]
+  \tikzstyle{comment}=[ right=2pt, font=\small, fill=white, text=black, draw=black, ]
+  \tikzstyle{every state}=[rectangle,thick, draw=black,fill=gray!20,text=black, minimum width= 6cm, minimum height= 1.20cm ]
+  \tikzstyle{smallstate}=[rectangle,thick, draw=black,fill=gray!10,text=black, minimum width= 4cm, minimum height= 1.20cm ]
+  \node[smallstate]         (A)                    {IPv6};
+  \node[smallstate]         (B) [below of=A]       {RPL Lite};
+  \begin{scope}[on background layer]
+    \node[state, fit=(A)(B)] (AB)                 {};
+  \end{scope}
+  \node[state,below=1cm]         (C) [below of=AB]       {TSCH};
+  \node[state]         (D) [below of=C]       {LoRa};
+  \node[comment]       at (AB.north west) {Network Layer};
+  \node[comment]       at (C.north west) {MAC Layer};
+  \node[comment]       at (D.north west) {Physical Layer};
+\end{tikzpicture}
+}
+\end{figure}
+\end{column}
+\end{columns}
 \end{frame}
 
 \begin{frame}{Approach}
 \framesubtitle{Time Slotted Channel Hopping (TSCH)}
-
 \begin{columns}
 \begin{column}{0.5\textwidth}
-
 Made for IEEE802.15.4 Phy
-
 \begin{itemize}
   \item Time Division Multiplexing
   \begin{itemize}
     \item Power Efficient
-    \item No collision
   \end{itemize}
   \only<2->{
   \item Frequency Division Multiplexing
@@ -37,14 +77,11 @@ Made for IEEE802.15.4 Phy
   \end{itemize}
   }
 \end{itemize}
-
 \end{column}
 \begin{column}{0.5\textwidth}
-
 \begin{figure}[H]
 \centering
-
-  \resizebox{5cm}{4cm}{%
+  \scalebox{0.6}{%
   \begin{tikzpicture}[
     asn/.style={black!70, minimum size=1cm},
     timeslot/.style={draw, rectangle, minimum size=1cm},
@@ -122,23 +159,6 @@ Made for IEEE802.15.4 Phy
 \end{figure}
 \end{column}
 \end{columns}
-\end{frame}
-
-\begin{frame}{Approach}
-\framesubtitle{TSCH - Related Work}
-\begin{itemize}
-    \item UWB-TSCH
-    \begin{itemize}
-      \item Port for UWB Communications
-    \end{itemize}
-    \item TSCH-over-LoRa
-    \begin{itemize}
-      \item Recent Study
-      \item Port for LoRa
-    \end{itemize}
-\end{itemize}
-\footcitetext{tschoverlora}
-\footcitetext{uwbtsch}
 \end{frame}
 
 \begin{frame}{Approach}
@@ -250,6 +270,10 @@ Made for IEEE802.15.4 Phy
         (ts10.south west) rectangle (ts33.north east)
         (ts14.south west) rectangle (ts37.north east);
     \draw[arr,->] ([yshift=-10pt]ts0.south west) -- node[fill=white] {$time$} ([yshift=-10pt]{ts7.south east});
+
+    \only<2->{
+      \draw[pattern=north west lines, pattern color=red!90] (ts10.north west) rectangle (ts17.south east);
+    }
 \end{tikzpicture}
 }
 \end{column}
@@ -290,30 +314,12 @@ Made for IEEE802.15.4 Phy
   \fill[blue!50] (3,4.9) rectangle (6,5.1);
   \fill[orange!50] (0,4.9) rectangle (3,5.1);
   \fill[green!50] (6,6.9) rectangle (9,7.1);
+
+  \only<2->{
+    \draw[pattern=north west lines, pattern color=red!90] (0,0) rectangle (3,8);
+  }
 \end{tikzpicture}
 }
-
-
 \end{column}
 \end{columns}
-
-\end{frame}
-
-\begin{frame}{Approach}
-\framesubtitle{Porting TSCH}
-\begin{itemize}
-  \item LoRa multi-hop network
-  \begin{itemize}
-    \item Long range
-    \item Power efficient
-    \item Reliable
-  \end{itemize}
-  \item Contiki as starting point
-  \item Using RPL
-  \item Porting TSCH
-  \begin{itemize}
-    \item No implementation for LoRa
-  \end{itemize}
-  \item Radio driver for LoRa
-\end{itemize}
 \end{frame}
