@@ -14,24 +14,22 @@
 % \end{itemize}
 % \end{frame}
 
-\begin{frame}{Approach}
-\framesubtitle{LoRa Multi-hop Network}
+\begin{frame}{My Approach}
+\framesubtitle{LoRa Multi-hop Network with standardized IoT protocol}
 \begin{columns}
 \begin{column}{0.5\textwidth}
 \begin{itemize}
   \item LoRa multi-hop network
   \begin{itemize}
-    \item Long range
+    \item IPv6 enabled
     \item Power efficient
     \item Reliable
   \end{itemize}
-  \item Using RPL
-  \item Porting TSCH
+  \item Standardized protocol
   \begin{itemize}
-    \item No implementation for LoRa
+    \item Routing Protocol for Low-Power and Lossy Networks (RPL)
+    \item Time Slotted Channel Hopping (TSCH)
   \end{itemize}
-  \item Contiki as starting point
-  \item Radio driver for LoRa
 \end{itemize}
 \end{column}
 \begin{column}{0.5\textwidth}
@@ -43,7 +41,7 @@
   \tikzstyle{every state}=[rectangle,thick, draw=black,fill=gray!20,text=black, minimum width= 6cm, minimum height= 1.20cm ]
   \tikzstyle{smallstate}=[rectangle,thick, draw=black,fill=gray!10,text=black, minimum width= 4cm, minimum height= 1.20cm ]
   \node[smallstate]         (A)                    {IPv6};
-  \node[smallstate]         (B) [below of=A]       {RPL Lite};
+  \node[smallstate]         (B) [below of=A]       {RPL};
   \begin{scope}[on background layer]
     \node[state, fit=(A)(B)] (AB)                 {};
   \end{scope}
@@ -59,117 +57,111 @@
 \end{columns}
 \end{frame}
 
-\begin{frame}{Approach}
+\begin{frame}{My Approach}
 \framesubtitle{Time Slotted Channel Hopping (TSCH)}
 \begin{columns}
 \begin{column}{0.5\textwidth}
-Made for IEEE802.15.4 Phy
-\begin{itemize}
-  \item Time Division Multiplexing
-  \begin{itemize}
-    \item Power Efficient
-  \end{itemize}
-  \only<2->{
-  \item Frequency Division Multiplexing
-  \begin{itemize}
-    \item External interference resilience
-    \item Concurrent transmission
-  \end{itemize}
-  }
-\end{itemize}
-\end{column}
-\begin{column}{0.5\textwidth}
 \begin{figure}[H]
 \centering
-  \scalebox{0.6}{%
-  \begin{tikzpicture}[
-    asn/.style={black!70, minimum size=1cm},
-    timeslot/.style={draw, rectangle, minimum size=1cm},
-    arr/.style={help lines,black!70,<->},
-    desc/.style={black!70},
-  ]
-    \only<2->{
-    \foreach [evaluate={\ts=int(mod(\i, 4))}] \i in {0,...,7} {
-    \node (ts3\i) [timeslot] at (\i, 3) {};
-    }
-    \foreach [evaluate={\ts=int(mod(\i, 4))}] \i in {0,...,7} {
-    \node (ts2\i) [timeslot] at (\i, 2) {};
-    }
-    }
-    \foreach [evaluate={\ts=int(mod(\i, 4))}] \i in {0,...,7} {
-    \node (ts1\i) [timeslot] at (\i, 1) {};
-    }
-    \foreach [evaluate={\ts=int(mod(\i, 4))}] \i in {0,...,7} {
-    \node (ts\i) [asn] at (\i, 0) {$TS_{\ts}$};
-    }
+\scalebox{0.6}{
+\begin{tikzpicture}[
+  asn/.style={black!70, minimum size=1cm},
+  timeslot/.style={draw, rectangle, minimum size=1cm},
+  arr/.style={help lines,black!70,<->},
+  desc/.style={black!70},
+]
+  \foreach \i in {0,...,7} {
+  \node (asn\i) [asn] at (\i, 4) {$ASN_{\i}$};
+  }
+  \foreach [evaluate={\ts=int(mod(\i, 4))}] \i in {0,...,7} {
+  \node (ts3\i) [timeslot] at (\i, 3) {};
+  }
+  \foreach [evaluate={\ts=int(mod(\i, 4))}] \i in {0,...,7} {
+  \node (ts2\i) [timeslot] at (\i, 2) {};
+  }
+  \foreach [evaluate={\ts=int(mod(\i, 4))}] \i in {0,...,7} {
+  \node (ts1\i) [timeslot] at (\i, 1) {};
+  }
+  \foreach [evaluate={\ts=int(mod(\i, 4))}] \i in {0,...,7} {
+  \node (ts\i) [asn] at (\i, 0) {$TS_{\ts}$};
+  }
 
-    \only<2->{
-    \node (choff3) [black!70] at (-1.5, 3) {$Ch_{off} 2$};
-    \node (choff2) [black!70] at (-1.5, 2) {$Ch_{off} 1$};
-    \node (choff1) [black!70] at (-1.5, 1) {$Ch_{off} 0$};
-    }
+  \node (choff3) [black!70] at (-1.0, 3) {$Ch_2$};
+  \node (choff2) [black!70] at (-1.0, 2) {$Ch_1$};
+  \node (choff1) [black!70] at (-1.0, 1) {$Ch_0$};
 
-    \begin{scope}[on background layer]
-    \only<2->{
-    \fill[green!50] (ts22.south west) rectangle (ts22.north east);
-    \fill[green!50] (ts36.south west) rectangle (ts36.north east);
+  \node (freq3) [black!70] at (8.5, 3) {$868.5 kHz$};
+  \node (freq2) [black!70] at (8.5, 2) {$868.3 kHz$};
+  \node (freq1) [black!70] at (8.5, 1) {$868.1 kHz$};
 
-    \fill[orange!50] (ts30.south west) rectangle (ts30.north east);
-    \fill[orange!50] (ts14.south west) rectangle (ts14.north east);
+  \begin{scope}[on background layer]
+  \fill[green!50] (ts22.south west) rectangle (ts22.north east);
+  \fill[green!50] (ts36.south west) rectangle (ts36.north east);
 
-    \fill[blue!50] (ts24.south west) rectangle (ts24.north east);
-    }
+  \fill[orange!50] (ts30.south west) rectangle (ts30.north east);
+  \fill[orange!50] (ts14.south west) rectangle (ts14.north east);
 
-    \fill[blue!50] (ts10.south west) rectangle (ts10.north east);
-    \end{scope}
-
-    \only<2->{
-        \draw[ultra thick]
-        (ts10.south west) rectangle (ts33.north east)
-        (ts14.south west) rectangle (ts37.north east);
-    }
-    \only<1>{
-        \draw[ultra thick]
-        (ts10.south west) rectangle (ts13.north east)
-        (ts14.south west) rectangle (ts17.north east);
-    }
-
-    \draw[arr,->]
-    ([yshift=-10pt]ts0.south west) -- node[fill=white] {$time$} ([yshift=-10pt]{ts7.south east});
-
-  \begin{scope}[xshift=2.5cm,yshift=-3cm,->,>=stealth',shorten >=1pt,auto,node distance=2.5cm]
-    \tikzstyle{every state}=[thick,draw=gray!50,fill=gray!20,draw=none,text=black]
-
-    \node[state]         (A) [] {A};
-    \node[state]         (B) [below of=A]       {B};
-    \node[state]         (C) [right of=B]       {C};
-
-    \only<2-> {
-      \path (A) edge [bend left,draw=orange!50] node[draw=orange!50] {$TS_1$} (C)
-          (B) edge [bend left,draw=blue!50] node[draw=blue!50] {$TS_1$} (A)
-          (C) edge [bend left,draw=green!50] node[above right,draw=green!50] {$TS_3$} (A);
-    }
-    \only<1> {
-      \path (B) edge [bend left,draw=blue!50] node[draw=blue!50] {$TS_1$} (A);
-    }
+  \fill[blue!50] (ts24.south west) rectangle (ts24.north east);
+  \fill[blue!50] (ts10.south west) rectangle (ts10.north east);
   \end{scope}
+
+  \draw[ultra thick]
+      (ts10.south west) rectangle (ts33.north east)
+      (ts14.south west) rectangle (ts37.north east);
+  \draw[arr,->] ([yshift=-10pt]ts0.south west) -- node[fill=white] {$time$} ([yshift=-10pt]{ts7.south east});
+  \draw[arr,->] (-2,0) -- node[fill=white] {$freq$} (-2,4);
+
+  % \draw[pattern=north west lines, pattern color=red!90] (ts10.north west) rectangle (ts17.south east);
 \end{tikzpicture}
 }
-\caption{TSCH Schedule\label{fig:customsched}}
+\end{figure}
+\end{column}
+\begin{column}{0.8\textwidth}
+\begin{figure}[H]
+\centering
+\scalebox{0.5}{%
+\begin{tikzpicture}[
+  asn/.style={black!70, minimum size=1cm},
+  timeslot/.style={draw, rectangle, minimum size=1cm},
+  arr/.style={help lines,black!70,<->},
+  desc/.style={black!70},
+]
+\begin{scope}[->,>=stealth',shorten >=1pt,auto,node distance=2.5cm]
+  \tikzstyle{every state}=[thick,draw=gray!50,fill=gray!20,draw=none,text=black]
+
+  \node[state]         (A) [] {A};
+  \node[state]         (B) [below of=A]       {B};
+  \node[state]         (C) [right of=B]       {C};
+
+  \path (A) edge [bend left,draw=orange!50] node[draw=orange!50] {$TS_0$} (C)
+      (B) edge [bend left,draw=blue!50] node[draw=blue!50] {$TS_0$} (A)
+      (C) edge [bend left,draw=green!50] node[above right,draw=green!50] {$TS_2$} (A);
+\end{scope}
+\end{tikzpicture}
+}
 \end{figure}
 \end{column}
 \end{columns}
+
+\begin{equation*}
+  \label{eq:channel}
+  Channel_{number} = (ASN + Channel_{offset}) \% Total_{channel}
+\end{equation*}
 \end{frame}
 
-\begin{frame}{Approach}
+\begin{frame}{My Approach}
 \framesubtitle{TSCH - Time Slots}
 
-\resizebox{11.2cm}{3.8cm}{%
+\begin{figure}[H]
+\centering
+\scalebox{0.6}{%
 \begin{tikzpicture}[
   timeslot/.style={draw, rectangle, minimum size=1cm},
   description/.style={draw, rectangle, minimum size=1cm},
   arr/.style={help lines,black!70,<->},
 ]
+
+\draw[->,thick] (-1.1,1.1)--(10,1.1) node[right]{time};
 
 \foreach [evaluate={\ts=int(mod(\i, 4))}] \i in {0,...,7} {
   \node (ts\i) [timeslot] at (\i, 0) {$TS_{\ts}$};
@@ -224,102 +216,66 @@ Made for IEEE802.15.4 Phy
     (desc.south east) -- ({ddesc.north east});
 \end{tikzpicture}
 }
+\end{figure}
 \end{frame}
 
-\begin{frame}{Approach}
-\framesubtitle{TSCH - Channel Hopping}
+% \begin{frame}{My Approach}
+% \framesubtitle{TSCH - Channel Hopping}
+% \begin{figure}[H]
+% \centering
+% \scalebox{0.6}{%
+% \begin{tikzpicture}[
+%   asn/.style={black!70, minimum size=1cm},
+%   timeslot/.style={draw, rectangle, minimum size=1cm},
+%   arr/.style={help lines,black!70,<->},
+%   desc/.style={black!70},
+% ]
+%   \foreach \i in {0,...,7} {
+%   \node (asn\i) [asn] at (\i, 4) {$ASN_{\i}$};
+%   }
+%   \foreach [evaluate={\ts=int(mod(\i, 4))}] \i in {0,...,7} {
+%   \node (ts3\i) [timeslot] at (\i, 3) {};
+%   }
+%   \foreach [evaluate={\ts=int(mod(\i, 4))}] \i in {0,...,7} {
+%   \node (ts2\i) [timeslot] at (\i, 2) {};
+%   }
+%   \foreach [evaluate={\ts=int(mod(\i, 4))}] \i in {0,...,7} {
+%   \node (ts1\i) [timeslot] at (\i, 1) {};
+%   }
+%   \foreach [evaluate={\ts=int(mod(\i, 4))}] \i in {0,...,7} {
+%   \node (ts\i) [asn] at (\i, 0) {$TS_{\ts}$};
+%   }
 
-\begin{columns}
-\begin{column}{0.5\textwidth}
-  \resizebox{5cm}{2.5cm}{%
-  \begin{tikzpicture}[
-    asn/.style={black!70, minimum size=1cm},
-    timeslot/.style={draw, rectangle, minimum size=1cm},
-    arr/.style={help lines,black!70,<->},
-    desc/.style={black!70},
-  ]
-    \foreach [evaluate={\ts=int(mod(\i, 4))}] \i in {0,...,7} {
-    \node (ts3\i) [timeslot] at (\i, 3) {};
-    }
-    \foreach [evaluate={\ts=int(mod(\i, 4))}] \i in {0,...,7} {
-    \node (ts2\i) [timeslot] at (\i, 2) {};
-    }
-    \foreach [evaluate={\ts=int(mod(\i, 4))}] \i in {0,...,7} {
-    \node (ts1\i) [timeslot] at (\i, 1) {};
-    }
-    \foreach [evaluate={\ts=int(mod(\i, 4))}] \i in {0,...,7} {
-    \node (ts\i) [asn] at (\i, 0) {$TS_{\ts}$};
-    }
+%   \node (choff3) [black!70] at (-1.5, 3) {$Ch_2$};
+%   \node (choff2) [black!70] at (-1.5, 2) {$Ch_1$};
+%   \node (choff1) [black!70] at (-1.5, 1) {$Ch_0$};
 
-    \node (choff3) [black!70] at (-1.5, 3) {$Ch_{off} 2$};
-    \node (choff2) [black!70] at (-1.5, 2) {$Ch_{off} 1$};
-    \node (choff1) [black!70] at (-1.5, 1) {$Ch_{off} 0$};
+%   \node (freq3) [black!70] at (8.5, 3) {$868.5 kHz$};
+%   \node (freq2) [black!70] at (8.5, 2) {$868.3 kHz$};
+%   \node (freq1) [black!70] at (8.5, 1) {$868.1 kHz$};
 
-    \begin{scope}[on background layer]
-    \fill[green!50] (ts22.south west) rectangle (ts22.north east);
-    \fill[green!50] (ts36.south west) rectangle (ts36.north east);
+%   \begin{scope}[on background layer]
+%   \fill[green!50] (ts22.south west) rectangle (ts22.north east);
+%   \fill[green!50] (ts36.south west) rectangle (ts36.north east);
 
-    \fill[orange!50] (ts30.south west) rectangle (ts30.north east);
-    \fill[orange!50] (ts14.south west) rectangle (ts14.north east);
+%   \fill[orange!50] (ts30.south west) rectangle (ts30.north east);
+%   \fill[orange!50] (ts14.south west) rectangle (ts14.north east);
 
-    \fill[blue!50] (ts24.south west) rectangle (ts24.north east);
-    \fill[blue!50] (ts10.south west) rectangle (ts10.north east);
-    \end{scope}
+%   \fill[blue!50] (ts24.south west) rectangle (ts24.north east);
+%   \fill[blue!50] (ts10.south west) rectangle (ts10.north east);
+%   \end{scope}
 
-    \draw[ultra thick]
-        (ts10.south west) rectangle (ts33.north east)
-        (ts14.south west) rectangle (ts37.north east);
-    \draw[arr,->] ([yshift=-10pt]ts0.south west) -- node[fill=white] {$time$} ([yshift=-10pt]{ts7.south east});
+%   \draw[ultra thick]
+%       (ts10.south west) rectangle (ts33.north east)
+%       (ts14.south west) rectangle (ts37.north east);
+%   \draw[arr,->] ([yshift=-10pt]ts0.south west) -- node[fill=white] {$time$} ([yshift=-10pt]{ts7.south east});
 
-    \only<2->{
-      \draw[pattern=north west lines, pattern color=red!90] (ts10.north west) rectangle (ts17.south east);
-    }
-\end{tikzpicture}
-}
-\end{column}
-\begin{column}{0.5\textwidth}
+%   \only<2->{
+%     \draw[pattern=north west lines, pattern color=red!90] (ts10.north west) rectangle (ts17.south east);
+%   }
+% \end{tikzpicture}
+% }
+% \caption{}
+% \end{figure}
 
-\resizebox{5.5cm}{5cm}{%
-\begin{tikzpicture}
-  \draw[->,thick] (-0.1,0)--(9,0) node[right]{frequency (kHz)};
-  \draw[->,thick] (0,-0.1)--(0,8) node[above]{ASN};
-  \node[] at (2, -0.5) {868.1};
-  \draw[] (2,-0.1)--(2,0.1);
-  \node[] at (5, -0.5) {868.3};
-  \draw[] (5,-0.1)--(5,0.1);
-  \node[] at (8, -0.5) {868.5};
-  \draw[] (8,-0.1)--(8,0.1);
-
-  \node[] at (-1.2, 1) {0};
-  \draw[] (-0.1,1)--(0.1,1);
-  \node[] at (-1.2, 2) {1};
-  \draw[] (-0.1,2)--(0.1,2);
-  \node[] at (-1.2, 3) {2};
-  \draw[] (-0.1,3)--(0.1,3);
-  \node[] at (-1.2, 4) {3};
-  \draw[] (-0.1,4)--(0.1,4);
-  \node[] at (-1.2, 5) {4};
-  \draw[] (-0.1,5)--(0.1,5);
-  \node[] at (-1.2, 6) {5};
-  \draw[] (-0.1,6)--(0.1,6);
-  \node[] at (-1.2, 7) {6};
-  \draw[] (-0.1,7)--(0.1,7);
-  \node[] at (-1.2, 8) {7};
-  \draw[] (-0.1,8)--(0.1,8);
-
-  \fill[blue!50] (0,0.9) rectangle (3,1.1);
-  \fill[orange!50] (6,0.9) rectangle (9,1.1);
-  \fill[green!50] (3,2.9) rectangle (6,3.1);
-
-  \fill[blue!50] (3,4.9) rectangle (6,5.1);
-  \fill[orange!50] (0,4.9) rectangle (3,5.1);
-  \fill[green!50] (6,6.9) rectangle (9,7.1);
-
-  \only<2->{
-    \draw[pattern=north west lines, pattern color=red!90] (0,0) rectangle (3,8);
-  }
-\end{tikzpicture}
-}
-\end{column}
-\end{columns}
-\end{frame}
+% \end{frame}

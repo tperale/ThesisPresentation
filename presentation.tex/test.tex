@@ -1,39 +1,45 @@
 \begin{frame}{Implementation}
 \framesubtitle{Setup}
 \begin{columns}
-\begin{column}{0.5\textwidth}
+\begin{column}{0.4\textwidth}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\textwidth]{presentation.tex/fig/rn2483.jpg}
+    \includegraphics[width=0.9\textwidth]{presentation.tex/fig/rn2483.jpg}
     \caption{The RN2483 LoRa radio shield\label{fig:rn2483pic}}
 \end{figure}
 \end{column}
-\begin{column}{0.5\textwidth}
+\begin{column}{0.4\textwidth}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\textwidth]{presentation.tex/fig/zolertia.jpg}
+    \includegraphics[width=0.9\textwidth]{presentation.tex/fig/zolertia.jpg}
     \caption{The Zolertia RE-Mote with the shield\label{fig:zolpic}}
+\end{figure}
+\end{column}
+\begin{column}{0.2\textwidth}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{presentation.tex/fig/contiki.png}
+    \caption{contiki-ng OS}
 \end{figure}
 \end{column}
 \end{columns}
 \end{frame}
 
 \begin{frame}{Implementation}
-\framesubtitle{Driver}
+\framesubtitle{Physical Layer: My Driver for LoRa Shield}
 
 \begin{columns}
 \begin{column}{0.5\textwidth}
 \begin{itemize}
-    \item No LoRa Driver available
     \item Contiki Radio Driver
-    \item Syncronized UART communications
+    \item Synchronized UART communications
 \end{itemize}
 \end{column}
 \begin{column}{0.5\textwidth}
 \begin{figure}[H]
 \centering
-\resizebox{4.8cm}{5.3cm}{%
+\scalebox{0.8}{%
 \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=1.6cm]
 \tikzstyle{comment}=[
   right=2pt,
@@ -55,14 +61,17 @@
   minimum height= 1.20cm
 ]
 
-\node[smallstate]         (A)                    {Network Layer};
-\node[smallstate]         (B) [below of=A]       {Routing};
-\begin{scope}[on background layer]
-  \node[state, fit=(A)(B)] (AB)                 {};
-\end{scope}
-\node[state,below=1cm]         (C) [below of=AB]       {MAC};
+% \node[smallstate]         (A)                    {Network Layer};
+% \node[smallstate]         (B) [below of=A]       {Routing};
+% \begin{scope}[on background layer]
+%   \node[state, fit=(A)(B)] (AB)                 {};
+% \end{scope}
+\node[state]         (AB)                    {};
+\node[state]         (C) [below of=AB]       {};
 \node[state]         (D) [below of=C]       {LoRa Driver};
 
+\node[comment]       at (AB.north west) {Network Layer};
+\node[comment]       at (C.north west) {MAC Layer};
 \node[comment]       at (D.north west) {Physical Layer};
 \end{tikzpicture}
 }
@@ -72,29 +81,67 @@
 \end{frame}
 
 \begin{frame}{Implementation}
-\framesubtitle{Adapt TSCH for LoRa}
+\framesubtitle{Medium Access Control with TSCH}
+
+\begin{figure}[H]
+\centering
+\scalebox{0.8}{%
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=1.6cm]
+\tikzstyle{comment}=[
+  right=2pt,
+  font=\small,
+  fill=white,
+  text=black,
+  draw=black,
+]
+
+\tikzstyle{every state}=[rectangle,thick,
+  draw=black,fill=gray!20,text=black,
+  minimum width= 6cm,
+  minimum height= 1.20cm
+]
+
+\tikzstyle{smallstate}=[rectangle,thick,
+  draw=black,fill=gray!10,text=black,
+  minimum width= 4cm,
+  minimum height= 1.20cm
+]
+
+\node[state]         (AB)                    {};
+\node[state]         (C) [below of=AB]       {TSCH};
+\node[state]         (D) [below of=C]       {LoRa Driver};
+
+\node[comment]       at (AB.north west) {Network Layer};
+\node[comment]       at (C.north west) {MAC Layer};
+\node[comment]       at (D.north west) {Physical Layer};
+\end{tikzpicture}
+}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Implementation}
+\framesubtitle{My Adaptation of TSCH for LoRa}
 \begin{columns}
 \begin{column}{0.5\textwidth}
-TSCH for LoRa porting issues
+TSCH for LoRa adaptations
 \begin{itemize}
     \item Time slot parts timing 
-    \item Issues
+    \item Challenges
     \begin{itemize}
-      \item Adaptation to 32 bits
+      \item $131 ms$ timing limit
       \item Interrupt clash
       \item Watchdog
    \end{itemize}
 \end{itemize}
 \end{column}
 \begin{column}{0.5\textwidth}
-
-\resizebox{5.6cm}{2.3cm}{%
+\scalebox{0.38}{%
 \begin{tikzpicture}[
   timeslot/.style={draw, rectangle, minimum size=1cm},
   description/.style={draw, rectangle, minimum size=1cm},
   arr/.style={help lines,black!70,<->},
 ]
-
+\draw[arr,->] (-2, 1) -- node[fill=white] {$time$} (10, 1);
 \foreach [evaluate={\ts=int(mod(\i, 4))}] \i in {0,...,7} {
   \node (ts\i) [timeslot] at (\i, 0) {$TS_{\ts}$};
 }
@@ -110,7 +157,7 @@ TSCH for LoRa porting issues
   (ts4.south west) rectangle (ts7.north east);
 
 \begin{scope}[xshift=-1.2cm,yshift=-2cm,inner sep=0pt, outer sep=0pt]
-  \node (desc) [fit={(-2.5,0) (0,1)}, label=center:{Transmitter}] {};
+  \node (desc) [fit={(-1.5,0) (0,1)}, label=center:{TX}] {};
   \node (desc0) [description, fit={(0,0) (3,1)}, label=center:{tx\_offset}] {};
   \node (desc1) [description, fit={(3,0) (6,1)}, label=center:{max\_tx}] {};
   \node (desc2) [description, fit={(6,0) (9,1)}, label=center:{rx\_ack\_delay}] {};
@@ -125,7 +172,7 @@ TSCH for LoRa porting issues
   ([yshift=0pt]{desc3.north east});
 
 \begin{scope}[xshift=-1.2cm,yshift=-3.5cm,inner sep=0pt, outer sep=0pt]
-  \node (ddesc) [fit={(-2.5,0) (0,1)}, label=center:{Receiver}] {};
+  \node (ddesc) [fit={(-1.5,0) (0,1)}, label=center:{RX}] {};
   \node (ddesc0) [description, fit={(0,0) (3,1)}, label=center:{rx\_offset}] {};
   \node (ddesc1) [description, fit={(3,0) (6,1)}, label=center:{rx\_wait}] {};
   \node (ddesc2) [description, fit={(6,0) (9,1)}, label=center:{tx\_ack\_delay}] {};
@@ -146,7 +193,7 @@ TSCH for LoRa porting issues
 \end{frame}
 
 \begin{frame}{Implementation}
-\framesubtitle{Adapt TSCH for LoRa}
+\framesubtitle{My Adaptation of TSCH for LoRa}
 \begin{columns}
 \begin{column}{0.5\textwidth}
 Hardware specific issues
@@ -157,10 +204,9 @@ Hardware specific issues
       \item Approximation
     \end{itemize}
     \only<2->{
-      \item Missing feature
+      \item No reception ack
       \begin{itemize}
         \item Less precision
-        \item Drift issues
       \end{itemize}
     }
 \end{itemize}
@@ -173,7 +219,7 @@ Hardware specific issues
   description/.style={draw, rectangle, minimum size=1cm},
   arr/.style={help lines,black!70,<->},
 ]
-
+\draw[arr,->] (-1.5, 1) -- node[fill=white] {$time$} (6, 1);
 \foreach [evaluate={\ts=int(mod(\i, 4))}] \i in {0,...,3} {
   \node (ts\i) [timeslot] at (\i, 0) {$TS_{\ts}$};
 }
@@ -270,34 +316,48 @@ Hardware specific issues
 % \end{frame}
 
 \begin{frame}{Validation}
-\framesubtitle{RPL}
+\framesubtitle{Testing Multi-hop Routing Protocol with LoRa}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+  \item Using the complete stack
+  % \item Testing channel hopping
+  \item Testing with custom schedule
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
 \begin{figure}[H]
 \centering
-\resizebox{4.8cm}{5.3cm}{%
+\scalebox{0.8}{%
 \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=1.6cm]
   \tikzstyle{comment}=[ right=2pt, font=\small, fill=white, text=black, draw=black, ]
   \tikzstyle{every state}=[rectangle,thick, draw=black,fill=gray!20,text=black, minimum width= 6cm, minimum height= 1.20cm ]
   \tikzstyle{smallstate}=[rectangle,thick, draw=black,fill=gray!10,text=black, minimum width= 4cm, minimum height= 1.20cm ]
-  \node[smallstate]         (A)                    {IPv6};
-  \node[smallstate]         (B) [below of=A]       {RPL Lite};
+  % \node[state]              (T)                    {UDP};
+  \node[smallstate]         (A)        {IPv6};
+  \node[smallstate]         (B) [below of=A]       {RPL};
   \begin{scope}[on background layer]
     \node[state, fit=(A)(B)] (AB)                 {};
   \end{scope}
   \node[state,below=1cm]         (C) [below of=AB]       {TSCH};
   \node[state]         (D) [below of=C]       {LoRa};
+  % \node[comment]       at (T.north west) {Transport Layer};
   \node[comment]       at (AB.north west) {Network Layer};
   \node[comment]       at (C.north west) {MAC Layer};
   \node[comment]       at (D.north west) {Physical Layer};
 \end{tikzpicture}
 }
+\caption{Packet route over my custom schedule}
 \end{figure}
+\end{column}
+\end{columns}
 \end{frame}
 
 \begin{frame}{Validation}
-\framesubtitle{RPL}
+\framesubtitle{Choose minimum schedule}
 \begin{figure}[H]
     \centering
-    \resizebox{9.4cm}{4.5cm}{%
+    \resizebox{9.4cm}{4.5cm}{
   \begin{tikzpicture}[]
 
   \begin{scope}[
@@ -306,6 +366,7 @@ Hardware specific issues
       timeslot/.style={draw, rectangle, minimum width=2cm, minimum height=1cm},
       arr/.style={help lines,black!70,<->},
   ]
+    \draw[arr,->] (-1, 2) -- node[fill=white] {$time$} (15, 2);
     \foreach \i in {0,...,7} {
       \node (ts\i) [asn] at (2*\i, 1) {$TS_{\i}$};
     }
@@ -326,37 +387,15 @@ Hardware specific issues
     \node[state]         (C) [right of=B]       {C};
     \node[state]         (D) [left of=B]       {D};
 
-    \path (A) edge [bend left] node {$TS_4$} (C)
-          (B) edge [bend left] node {$TS_1$} (A)
+    \path (A) edge [bend left,color=red!70] node {$TS_4$} (C)
+          (B) edge [bend left,color=red!70] node {$TS_1$} (A)
               edge [bend left] node {$TS_6$} (D)
           (C) edge [bend left] node[above right] {$TS_2$} (A)
               edge [bend left] node {$TS_3$} (B)
-          (D) edge [bend left] node {$TS_5$} (B);
+          (D) edge [bend left, color=red!70] node {$TS_5$} (B);
   \end{scope}
 \end{tikzpicture}
 }
-\end{figure}
-\end{frame}
-
-\begin{frame}{Validation}
-\framesubtitle{RPL}
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}[]
-
-  \begin{scope}[xshift=5cm,yshift=-2cm,->,>=stealth',shorten >=1pt,auto,node distance=2.5cm]
-    \tikzstyle{every state}=[thick,draw=gray!50,fill=gray!20,draw=none,text=black]
-
-    \node[state]         (A) [] {A};
-    \node[state]         (B) [below left of=A]       {B};
-    \node[state]         (C) [below right of=A]       {C};
-    \node[state]         (D) [below left of=B]       {D};
-
-    \path (A) edge  node {$TS_4$} (C);
-    \path (B) edge  node {$TS_1$} (A);
-    \path (D) edge  node {$TS_5$} (B);
-  \end{scope}
-\end{tikzpicture}
 \end{figure}
 \end{frame}
 
@@ -382,7 +421,7 @@ Hardware specific issues
 \draw[radiation] ([shift={(1cm,0cm)}]tx.east)-- node [above=5mm] {} ([shift={(-1cm,0cm)}]rx.west);
 \draw[-stealth,line width=1mm] (ttx.south) to[zigzag] +(0,-1.5);
 \end{tikzpicture}
-
+\caption{Channel Hopping sequence with jammed channel}
 \end{figure}
 \end{frame}
 
@@ -432,86 +471,86 @@ Hardware specific issues
 \end{figure}
 \end{frame}
 
-\begin{frame}{Validation}
-\framesubtitle{Jamming}
-\begin{figure}[H]
-  \centering
-  \begin{tikzpicture}
+% \begin{frame}{Validation}
+% \framesubtitle{Jamming}
+% \begin{figure}[H]
+%   \centering
+%   \begin{tikzpicture}
 
-  \begin{groupplot}[group style={group size=1 by 2,
-      horizontal sep=0pt,
-      vertical sep=1cm},
-      height=6cm,width=6cm,
-  ]
-  \nextgroupplot[
-    ycomb,
-    width=0.8\textwidth,
-    height=0.25\textwidth,
-    axis lines=middle,
-    ymin=0,
-    ymax=4,
-    ylabel={$Retry_{number}$},
-    ylabel near ticks,
-    yticklabel style={/pgf/number format/1000 sep=},
-    xmin=0,
-    xmax=50,
-    xlabel={$Transmission_{number}$},
-    xlabel near ticks,
-  ]
-    \addplot[color=blue, mark=x] coordinates {
-      (1,1)
-      (2,2)
-      (3,0)
-      (4,0)
-      (5,0)
-      (6,1)
-      (7,0)
-      (8,0)
-      (9,1)
-      (10,0)
-      (11,1)
-      (12,1)
-      (13,2)
-      (14,0)
-      (15,2)
-      (16,0)
-      (17,1)
-      (18,1)
-      (19,1)
-      (20,0)
-      (21,4)
-      (22,0)
-      (23,0)
-      (24,1)
-      (25,0)
-      (26,0)
-      (27,2)
-      (28,1)
-      (29,0)
-      (30,0)
-      (31,1)
-      (32,1)
-      (33,0)
-      (34,0)
-      (35,0)
-      (36,1)
-      (37,2)
-      (38,0)
-      (39,0)
-      (40,0)
-      (41,1)
-      (42,1)
-      (43,0)
-      (44,0)
-      (45,3)
-      (46,1)
-      (47,0)
-      (48,0)
-      (49,1)
-      (50,1)
-    };
-  \end{groupplot}
-  \end{tikzpicture}
-  % \caption{Retransmission per packet\label{fig:retransmission}}
-\end{figure}
-\end{frame}
+%   \begin{groupplot}[group style={group size=1 by 2,
+%       horizontal sep=0pt,
+%       vertical sep=1cm},
+%       height=6cm,width=6cm,
+%   ]
+%   \nextgroupplot[
+%     ycomb,
+%     width=0.8\textwidth,
+%     height=0.25\textwidth,
+%     axis lines=middle,
+%     ymin=0,
+%     ymax=4,
+%     ylabel={$Retry_{number}$},
+%     ylabel near ticks,
+%     yticklabel style={/pgf/number format/1000 sep=},
+%     xmin=0,
+%     xmax=50,
+%     xlabel={$Transmission_{number}$},
+%     xlabel near ticks,
+%   ]
+%     \addplot[color=blue, mark=x] coordinates {
+%       (1,1)
+%       (2,2)
+%       (3,0)
+%       (4,0)
+%       (5,0)
+%       (6,1)
+%       (7,0)
+%       (8,0)
+%       (9,1)
+%       (10,0)
+%       (11,1)
+%       (12,1)
+%       (13,2)
+%       (14,0)
+%       (15,2)
+%       (16,0)
+%       (17,1)
+%       (18,1)
+%       (19,1)
+%       (20,0)
+%       (21,4)
+%       (22,0)
+%       (23,0)
+%       (24,1)
+%       (25,0)
+%       (26,0)
+%       (27,2)
+%       (28,1)
+%       (29,0)
+%       (30,0)
+%       (31,1)
+%       (32,1)
+%       (33,0)
+%       (34,0)
+%       (35,0)
+%       (36,1)
+%       (37,2)
+%       (38,0)
+%       (39,0)
+%       (40,0)
+%       (41,1)
+%       (42,1)
+%       (43,0)
+%       (44,0)
+%       (45,3)
+%       (46,1)
+%       (47,0)
+%       (48,0)
+%       (49,1)
+%       (50,1)
+%     };
+%   \end{groupplot}
+%   \end{tikzpicture}
+%   % \caption{Retransmission per packet\label{fig:retransmission}}
+% \end{figure}
+% \end{frame}

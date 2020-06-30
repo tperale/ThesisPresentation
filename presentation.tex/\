@@ -1,5 +1,5 @@
 \begin{frame}{Introduction}
-  \framesubtitle{Internet of Things (I\MakeLowercase{o}T)}
+\framesubtitle{IoT}
 \begin{figure}
 \centering
 \includegraphics[width=0.4\textwidth]{presentation.tex/fig/iot.png}
@@ -69,14 +69,15 @@
 \end{frame}
 
 \begin{frame}{Introduction}
-\framesubtitle{Long-Range Communication (L\MakeLowercase{o}R\MakeLowercase{a})}
+\framesubtitle{LoRa}
 \begin{columns}
 \begin{column}{0.5\textwidth}
 \begin{itemize}
-  \item Proprietary Spread Spectrum Modulation Technique
+  \item Proprietary Modulation Technique
   \begin{itemize}
     \item Owned by Semtech
   \end{itemize}
+  % \item Chirp Spread Spectrum (CSS)
   % \item Spreading Factors (SF)
   % \begin{itemize}
   %   \item $\nearrow$ SF, $\searrow$ Data-rate
@@ -96,7 +97,7 @@
 \end{frame}
 
 \begin{frame}{Introduction}
-\framesubtitle{L\MakeLowercase{o}R\MakeLowercase{a}WAN MAC Protocol}
+\framesubtitle{LoRaWAN}
 \begin{columns}
 \begin{column}{0.5\textwidth}
 % \begin{itemize}
@@ -115,11 +116,10 @@
 % \end{itemize}
 \begin{figure}[H]
     \centering
-    \scalebox{0.7}{
     \begin{tikzpicture}[auto, thick]
       \node[server] (s) at (0,0) {};
       % Place super peers and connect them
-      \foreach \place/\name in {{(-1.8,-1.6)/a},{(1.7,2)/b},{(-2,1.6)/c},{(1.5,-2)/d}}
+      \foreach \place/\name in {{(-1,-1)/a}, {(1,1)/b},{(-1,1)/c},{(1,-1)/d},}
         \node[gateways] (\name) at \place {};
       %
       \begin{scope}[on background layer]
@@ -128,35 +128,21 @@
       \end{scope}
 
       % Place normal peers
-      \foreach \pos/\i in {below left of/1, below of/2, left of/3, above left
-      of/4, below right of/5,above of/6, right of/7}
-        \node[motes, \pos =a ] (a\i) {};
-      \foreach \speer/\peer in {a/a1,a/a2,a/a3,a/a4,a/a5,a/a6,a/a7}
-        \path[dotted] (\speer) edge (\peer);
-      %
-      \foreach \pos/\i in {above left of/1, right of/2, below right of/3, above right of/4, above of/5,below of/6,left of/7}
+      \foreach \pos/\i in {above left of/1, left of/2, below left of/3}
         \node[motes, \pos =b ] (b\i) {};
-      \foreach \speer/\peer in {b/b1,b/b2,b/b3,b/b4,b/b5,b/b6,b/b7}
+      \foreach \speer/\peer in {b/b1,b/b2,b/b3}
         \path[dotted] (\speer) edge (\peer);
       %
-      \foreach \pos/\i in {above left of/1, left of/2, below left of/3, above of/4, above right of/5,right of/6,below of/7}
-        \node[motes, \pos =c ] (c\i) {};
-      \foreach \speer/\peer in {c/c1,c/c2,c/c3,c/c4,c/c5,c/c6,c/c7}
+      \foreach \pos/\i in {below left of/1, below of/2, left of/3}
+        \node[motes, \pos =a ] (a\i) {};
+      \foreach \speer/\peer in {a/a1,a/a2,a/a3}
         \path[dotted] (\speer) edge (\peer);
       %
-      \foreach \pos/\i in {above right of/1, right of/2, below right of/3, below of/4, below left of/5,above of/6,left of/7}
-        \node[motes, \pos =d ] (d\i) {};
-      \foreach \speer/\peer in {d/d1,d/d2,d/d3,d/d4,d/d5,d/d6,d/d7}
-        \path[dotted] (\speer) edge (\peer);
+      \path[dotted] (a) edge (b3);
     \end{tikzpicture}
-    }
-    \caption{LoRaWAN star-of-stars topology}
-    \scalebox{0.5}{%
-    \begin{tabular}{r@{: }l r@{: }l}
-    \begin{tikzpicture}\draw[left color=orange,line width=1pt] circle(1ex);\end{tikzpicture} & Gateway & \begin{tikzpicture}\draw[left color=gray,line width=1pt] circle(1ex);\end{tikzpicture} & Motes
-    \end{tabular}
-    }
+    \caption{Star topology\label{fig:startopology}}
 \end{figure}
+
 \end{column}
 \begin{column}{0.5\textwidth}
 \begin{figure}[H]
@@ -173,8 +159,9 @@
   \node[comment]       at (D.north west) {Physical Layer};
 \end{tikzpicture}
 }
-\caption{Typical LoRaWAN Network Stack}
 \end{figure}
 \end{column}
 \end{columns}
 \end{frame}
+
+
