@@ -1,23 +1,23 @@
 \begin{frame}{Multi-hop}
 \framesubtitle{Nodes help each other to reach the base station}
 \begin{columns}
-\begin{column}{0.6\textwidth}
+\begin{column}{0.45\textwidth}
 \begin{itemize}
     % \item Communication between neighbor
-    \item Routing protocol needed to reach destination
+    \item Routing protocol needed
     \begin{itemize}
       \item Range increased
-      \item Adapts topology to node failure
+      \item Adapts route to node failure
     \end{itemize}
     \item Increase reliability
     % \item Bi-directional
     \item Overall higher energy consumption 
 \end{itemize}
 \end{column}
-\begin{column}{0.4\textwidth}
+\begin{column}{0.55\textwidth}
 \begin{figure}[H]
     \centering
-    \scalebox{0.8}{
+    \scalebox{0.9}{
     \begin{tikzpicture}[auto, thick]
       % Place super peers and connect them
       \foreach \place/\name in {{(0,0)/a}}
@@ -43,7 +43,8 @@
     \caption{Multi-hop Communication}
     \scalebox{0.5}{%
     \begin{tabular}{r@{: }l r@{: }l}
-    \begin{tikzpicture}\draw[left color=orange,line width=1pt] circle(1ex);\end{tikzpicture} & Gateway & \begin{tikzpicture}\draw[left color=gray,line width=1pt] circle(1ex);\end{tikzpicture} & Motes
+    \begin{tikzpicture}\draw[left color=orange,line width=1pt]
+        circle(1ex);\end{tikzpicture} & Gateway & \begin{tikzpicture}\draw[left color=gray,line width=1pt] circle(1ex);\end{tikzpicture} & Mote
     \end{tabular}
     }
 \end{figure}

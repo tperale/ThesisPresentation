@@ -122,7 +122,7 @@
 \begin{frame}{Implementation}
 \framesubtitle{My Adaptation of TSCH for LoRa}
 \begin{columns}
-\begin{column}{0.5\textwidth}
+\begin{column}{0.45\textwidth}
 TSCH for LoRa adaptations
 \begin{itemize}
     \item Time slot parts timing 
@@ -134,8 +134,8 @@ TSCH for LoRa adaptations
    \end{itemize}
 \end{itemize}
 \end{column}
-\begin{column}{0.5\textwidth}
-\scalebox{0.38}{%
+\begin{column}{0.55\textwidth}
+\scalebox{0.45}{%
 \begin{tikzpicture}[
   timeslot/.style={draw, rectangle, minimum size=1cm},
   description/.style={draw, rectangle, minimum size=1cm},
@@ -199,15 +199,11 @@ TSCH for LoRa adaptations
 Hardware specific issues
 \begin{itemize}
     \item Physical delay of RN2483
-    \begin{itemize}
-      \item No documentation
-      \item Approximation
-    \end{itemize}
     \only<2->{
       \item No reception ack
-      \begin{itemize}
-        \item Less precision
-      \end{itemize}
+      % \begin{itemize}
+      %   \item Less precision
+      % \end{itemize}
     }
 \end{itemize}
 \end{column}
@@ -400,7 +396,7 @@ Hardware specific issues
 \end{frame}
 
 \begin{frame}{Validation}
-\framesubtitle{Jamming}
+\framesubtitle{Testing Robustness to Channel Jamming}
 \begin{figure}[H]
 \centering
 
@@ -416,17 +412,17 @@ Hardware specific issues
 }
 \node[block](tx){Transmitter Node};
 \node[block,above right= 2cm of tx](ttx){Jammer};
-\node[block,right = 5cm of tx](rx){Coordinator Node};
+\node[block,right = 5cm of tx](rx){Receiver Node};
 
 \draw[radiation] ([shift={(1cm,0cm)}]tx.east)-- node [above=5mm] {} ([shift={(-1cm,0cm)}]rx.west);
 \draw[-stealth,line width=1mm] (ttx.south) to[zigzag] +(0,-1.5);
 \end{tikzpicture}
-\caption{Channel Hopping sequence with jammed channel}
+\caption{Testing setup}
 \end{figure}
 \end{frame}
 
 \begin{frame}{Validation}
-\framesubtitle{Jamming}
+\framesubtitle{Testing Robustness to Channel Jamming}
 \begin{figure}[H]
   \centering
   \scalebox{0.8}{%
@@ -449,9 +445,9 @@ Hardware specific issues
     \node (0ts\i) [asn] at (\i, 0) {$TS_{\ts}$};
     }
 
-    \node (choff3) [black!70] at (-1.5, 3) {$Ch_{off} 2$};
-    \node (choff2) [black!70] at (-1.5, 2) {$Ch_{off} 1$};
-    \node (choff1) [black!70] at (-1.5, 1) {$Ch_{off} 0$};
+    \node (choff3) [black!70] at (-1.0, 3) {$Ch_2$};
+    \node (choff2) [black!70] at (-1.0, 2) {$Ch_1$};
+    \node (choff1) [black!70] at (-1.0, 1) {$Ch_0$};
 
     \begin{scope}[on background layer]
     \fill[blue!50] (3ts8.south west) rectangle (3ts8.north east);
@@ -462,12 +458,13 @@ Hardware specific issues
     \draw[ultra thick]
         (1ts0.south west) rectangle (3ts3.north east)
         (1ts4.south west) rectangle (3ts7.north east)
-        (1ts7.south west) rectangle (3ts11.north east);
+        (1ts8.south west) rectangle (3ts11.north east);
     \draw[arr,->] ([yshift=-10pt]0ts0.south west) -- node[fill=white] {$time$} ([yshift=-10pt]{0ts11.south east});
 
     \draw[pattern=north west lines, pattern color=red!90] (1ts0.north west) rectangle (1ts11.south east);
   \end{tikzpicture}
   }
+\caption{Channel Hopping sequence with single jammed channel}
 \end{figure}
 \end{frame}
 

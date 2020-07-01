@@ -15,7 +15,7 @@
 % \end{frame}
 
 \begin{frame}{My Approach}
-\framesubtitle{LoRa Multi-hop Network with standardized IoT protocol}
+\framesubtitle{LoRa Multi-hop Network with standardized IoT protocols}
 \begin{columns}
 \begin{column}{0.5\textwidth}
 \begin{itemize}
@@ -25,7 +25,7 @@
     \item Power efficient
     \item Reliable
   \end{itemize}
-  \item Standardized protocol
+  \item Standardized protocols
   \begin{itemize}
     \item Routing Protocol for Low-Power and Lossy Networks (RPL)
     \item Time Slotted Channel Hopping (TSCH)
@@ -119,7 +119,7 @@
 \begin{column}{0.8\textwidth}
 \begin{figure}[H]
 \centering
-\scalebox{0.5}{%
+\scalebox{0.7}{%
 \begin{tikzpicture}[
   asn/.style={black!70, minimum size=1cm},
   timeslot/.style={draw, rectangle, minimum size=1cm},
@@ -133,9 +133,9 @@
   \node[state]         (B) [below of=A]       {B};
   \node[state]         (C) [right of=B]       {C};
 
-  \path (A) edge [bend left,draw=orange!50] node[draw=orange!50] {$TS_0$} (C)
-      (B) edge [bend left,draw=blue!50] node[draw=blue!50] {$TS_0$} (A)
-      (C) edge [bend left,draw=green!50] node[above right,draw=green!50] {$TS_2$} (A);
+  \path (A) edge [bend left,thick,draw=orange!50] node[draw=orange!50] {$TS_0$} (C)
+      (B) edge [bend left,thick,draw=blue!50] node[draw=blue!50] {$TS_0$} (A)
+      (C) edge [bend left,thick,draw=green!50] node[above right,draw=green!50] {$TS_2$} (A);
 \end{scope}
 \end{tikzpicture}
 }
@@ -149,75 +149,75 @@
 \end{equation*}
 \end{frame}
 
-\begin{frame}{My Approach}
-\framesubtitle{TSCH - Time Slots}
+% \begin{frame}{My Approach}
+% \framesubtitle{TSCH - Time Slots}
 
-\begin{figure}[H]
-\centering
-\scalebox{0.6}{%
-\begin{tikzpicture}[
-  timeslot/.style={draw, rectangle, minimum size=1cm},
-  description/.style={draw, rectangle, minimum size=1cm},
-  arr/.style={help lines,black!70,<->},
-]
+% \begin{figure}[H]
+% \centering
+% \scalebox{0.6}{%
+% \begin{tikzpicture}[
+%   timeslot/.style={draw, rectangle, minimum size=1cm},
+%   description/.style={draw, rectangle, minimum size=1cm},
+%   arr/.style={help lines,black!70,<->},
+% ]
 
-\draw[->,thick] (-1.1,1.1)--(10,1.1) node[right]{time};
+% \draw[->,thick] (-1.1,1.1)--(10,1.1) node[right]{time};
 
-\foreach [evaluate={\ts=int(mod(\i, 4))}] \i in {0,...,7} {
-  \node (ts\i) [timeslot] at (\i, 0) {$TS_{\ts}$};
-}
-\node (ts8) [minimum height=1cm, minimum width=2cm, black!70] at (8.5, 0) {\ldots};
+% \foreach [evaluate={\ts=int(mod(\i, 4))}] \i in {0,...,7} {
+%   \node (ts\i) [timeslot] at (\i, 0) {$TS_{\ts}$};
+% }
+% \node (ts8) [minimum height=1cm, minimum width=2cm, black!70] at (8.5, 0) {\ldots};
 
-\draw[help lines, black!70]
-  (ts8.north west) -- (ts8.north east) node[fill=white, black!70] {$\ldots$};
-\draw[help lines, black!70]
-  (ts8.south west) -- (ts8.south east) node[fill=white, black!70] {$\ldots$};
+% \draw[help lines, black!70]
+%   (ts8.north west) -- (ts8.north east) node[fill=white, black!70] {$\ldots$};
+% \draw[help lines, black!70]
+%   (ts8.south west) -- (ts8.south east) node[fill=white, black!70] {$\ldots$};
 
-\draw[ultra thick] 
-  (ts0.south west) rectangle (ts3.north east)
-  (ts4.south west) rectangle (ts7.north east);
+% \draw[ultra thick] 
+%   (ts0.south west) rectangle (ts3.north east)
+%   (ts4.south west) rectangle (ts7.north east);
 
-\begin{scope}[xshift=-1.2cm,yshift=-2.5cm,inner sep=0pt, outer sep=0pt]
-  \node (desc) [draw,rectangle,fit={(0,0) (14,1)}, label=left:{Transmitter~}] {};
-  \node (desc1) [description, fill=orange!20, fit={(3,0) (6,1)}, label=center:{data}] {};
-  \node (desc0) [description, fill=gray!20, fit={(1,0) (3,1)}, label=center:{tx\_offset}] {};
-  \only<2->{
-  \node (descsync1) [description, fill=blue!20, fit={(6.7,0) (7,1)}] {};
-  \node (descsync2) [description, fill=blue!20, fit={(9.5,0) (9.8,1)}] {};
-  \node (desc2) [description, fill=gray!20, fit={(7,0) (9.5,1)}, label=center:{rx\_ack\_delay}] {};
-  \draw[arr,<->]
-      ([yshift=-10pt]descsync1.south west) -- node[fill=white] {$guard$} ([yshift=-10pt]{descsync2.south east});
-  }
-\end{scope}
+% \begin{scope}[xshift=-1.2cm,yshift=-2.5cm,inner sep=0pt, outer sep=0pt]
+%   \node (desc) [draw,rectangle,fit={(0,0) (14,1)}, label=left:{Transmitter~}] {};
+%   \node (desc1) [description, fill=orange!20, fit={(3,0) (6,1)}, label=center:{data}] {};
+%   \node (desc0) [description, fill=gray!20, fit={(1,0) (3,1)}, label=center:{tx\_offset}] {};
+%   \only<2->{
+%   \node (descsync1) [description, fill=blue!20, fit={(6.7,0) (7,1)}] {};
+%   \node (descsync2) [description, fill=blue!20, fit={(9.5,0) (9.8,1)}] {};
+%   \node (desc2) [description, fill=gray!20, fit={(7,0) (9.5,1)}, label=center:{rx\_ack\_delay}] {};
+%   \draw[arr,<->]
+%       ([yshift=-10pt]descsync1.south west) -- node[fill=white] {$guard$} ([yshift=-10pt]{descsync2.south east});
+%   }
+% \end{scope}
 
-\draw[help lines, black!70,-]
-  ([yshift=0pt]ts4.south west) -- 
-  ([yshift=0pt]{desc.north west});
-\draw[help lines, black!70,-]
-  ([yshift=0pt]ts4.south east) -- 
-  ([yshift=0pt]{desc.north east});
+% \draw[help lines, black!70,-]
+%   ([yshift=0pt]ts4.south west) -- 
+%   ([yshift=0pt]{desc.north west});
+% \draw[help lines, black!70,-]
+%   ([yshift=0pt]ts4.south east) -- 
+%   ([yshift=0pt]{desc.north east});
 
-\begin{scope}[xshift=-1.2cm,yshift=-4.5cm,inner sep=0pt, outer sep=0pt]
-  \node (ddesc) [draw,rectangle,fit={(0,0) (14,1)}, label=left:{Receiver~}] {};
-  \node (ddescsync1) [description, fill=blue!20, fit={(0.7,0) (1,1)}] {};
-  \node (ddescsync2) [description, fill=blue!20, fit={(3,0) (3.3,1)}] {};
-  \node (ddesc0) [description, fill=gray!20, fit={(1,0) (3,1)}, label=center:{rx\_offset}] {};
-  \draw[arr,<->]
-      ([yshift=-10pt]ddescsync1.south west) -- node[fill=white] {$guard$} ([yshift=-10pt]{ddescsync2.south east});
-  \only<2->{
-  \node (ddesc2) [description, fill=gray!20, fit={(7,0) (9.5,1)}, label=center:{tx\_ack\_delay}] {};
-  \node (ddesc3) [description, fill=orange!20, fit={(9.5,0) (12,1)}, label=center:{ack}] {};
-  }
-\end{scope}
+% \begin{scope}[xshift=-1.2cm,yshift=-4.5cm,inner sep=0pt, outer sep=0pt]
+%   \node (ddesc) [draw,rectangle,fit={(0,0) (14,1)}, label=left:{Receiver~}] {};
+%   \node (ddescsync1) [description, fill=blue!20, fit={(0.7,0) (1,1)}] {};
+%   \node (ddescsync2) [description, fill=blue!20, fit={(3,0) (3.3,1)}] {};
+%   \node (ddesc0) [description, fill=gray!20, fit={(1,0) (3,1)}, label=center:{rx\_offset}] {};
+%   \draw[arr,<->]
+%       ([yshift=-10pt]ddescsync1.south west) -- node[fill=white] {$guard$} ([yshift=-10pt]{ddescsync2.south east});
+%   \only<2->{
+%   \node (ddesc2) [description, fill=gray!20, fit={(7,0) (9.5,1)}, label=center:{tx\_ack\_delay}] {};
+%   \node (ddesc3) [description, fill=orange!20, fit={(9.5,0) (12,1)}, label=center:{ack}] {};
+%   }
+% \end{scope}
 
-\draw[help lines, black!70,-]
-    (desc.south west) -- ({ddesc.north west});
-\draw[help lines, black!70,-]
-    (desc.south east) -- ({ddesc.north east});
-\end{tikzpicture}
-}
-\end{figure}
-\end{frame}
+% \draw[help lines, black!70,-]
+%     (desc.south west) -- ({ddesc.north west});
+% \draw[help lines, black!70,-]
+%     (desc.south east) -- ({ddesc.north east});
+% \end{tikzpicture}
+% }
+% \end{figure}
+% \end{frame}
 
 % \begin{frame}{My Approach}
 % \framesubtitle{TSCH - Channel Hopping}
